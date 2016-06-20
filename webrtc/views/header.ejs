@@ -1,0 +1,89 @@
+
+<head>
+
+    <meta name='keywords' content='WebRTC, HTML5, JavaScript' />
+    <meta name='description' content='WebRTC Reference App' />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1'>
+
+    <base target='_blank'>
+
+    <title>WebRTC client</title>
+
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap-theme.css' />
+    <link rel='stylesheet' href='/stylesheets/font-awesome.min.css'/>
+    <link rel='stylesheet' href='/stylesheets/Popup.css' />
+    <link rel='stylesheet' href='/stylesheets/myStyle.css'/>
+    <script src='/javascripts/commonJS/jquery-1.10.2.js'></script>
+    <script src='/javascripts/commonJS/jquery-ui-1.8.20.min.js'></script>
+    <script src='/javascripts/commonJS/jquery-ui-1.10.4.custom.min.js'></script>
+    <script src='/javascripts/commonJS/jquery-ui-1.10.4.custom.js'></script>
+    <script src='/javascripts/commonJS/jquery.js'></script>
+    <script src='/javascripts/commonJS/bootstrap.js'></script>
+    <script src='/javascripts/commonJS/bootstrap.min.js'></script>
+    <script src='/javascripts/commonJS/jquery-ui.js'></script>
+    <script src='/javascripts/commonJS/bootstrap-tab.js'></script>
+
+</head>
+
+<body scroll="no" style="overflow:hidden">
+<header class="navbar navbar-inverse bs-docs-nav" role="banner" style="height:7.5%;border-radius: 0px;">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand" target="_self" style="width:68px;"><img src="/images/dig3.png" alt="DIG" class='img-responsive'/></a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+            <ul class="nav navbar-nav">
+                <li class=
+                    <a  href="/" target="_self">主页</a>
+                </li>
+
+                <li id="regista" class=>
+                    <a  href="/regist" target="_self">注册</a>
+                </li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li id="user" >
+                    <a></a>
+                </li>
+                <li id="logina" >
+                    <a  href="/login" target="_self">登录</a>
+                </li>
+                <li id="logouta">
+                    <a href="/logout" target="_self">登出</a>
+                </li>
+                <li id="setting">
+                    <a href="/" target="">Personal Setting</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<script>
+    function clo() {
+        $(".close").parent().remove();
+    }
+    setTimeout('clo()',5000);
+</script>
+
+<%if(locals.success){%>
+
+    <%=locals.success%>
+
+<%}%>
+<%if(locals.error){%>
+<div  class="alert alert-danger">
+    <button type="button" class="close" onclick="clo()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
+    <%=locals.error%>
+</div>
+<%}%>

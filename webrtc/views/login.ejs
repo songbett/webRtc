@@ -1,0 +1,87 @@
+<!-- <!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Sign In</title>
+    <link type="text/css" rel="stylesheet" href="stylesheets/sign.css">
+    <link type="text/css" rel="stylesheet" href="stylesheets/common.css">
+</head>
+
+<body>
+<div id="content">
+    <form style="margin-top:70px;" action="/login" method="post">
+        <div class="form_line">
+            <div class="form_label">登录名：</div>
+            <input type="text" name="username"/>
+        </div>
+        <div class="form_line">
+            <div class="form_label">密码：</div>
+            <input type="password" name="password"/>
+        </div>
+        <div class="form_line">
+            <div class="form_label"></div>
+            <button class="button gray" type="submit">登录</button>
+            <button class="button gray" type="reset">取消</button>
+        </div>
+        <div class="form_line">
+            <div class="form_label"></div>
+            还没有账号？
+            <a href="/regist">注册</a>
+        </div>
+    </form>
+</div>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name='keywords' content='WebRTC, HTML5, JavaScript' />
+    <meta name='description' content='WebRTC Reference App' />
+    <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1'>
+    <base target='_blank'>
+    <title>WebRTC client</title>
+    <link rel='stylesheet' href='stylesheets/css/bootstrap.min.css' />
+    <link rel="stylesheet" type="text/css" href="stylesheets/css/bootstrap-theme.min.css"/>
+    <style>
+        .form-group span.input-group-addon{
+            width: 40px;
+        }
+    </style>
+</head>
+<body scroll="no" style="overflow:hidden">
+<div class="container">
+    <div style="margin: 0 auto;width: 500px;padding-bottom: 40px;margin-top:80px;border: 1px solid #dddddd;background-color:#fbfbfb;">
+        <form class="form-signin" role="form" method="post" target="_self" style="margin:30px 20px;">
+            <div class="single-panel-header">
+                <h1 >登录</h1>
+                <div style="BACKGROUND:#dddddd; OVERFLOW: hidden; HEIGHT: 3px">&gt;</div>
+            </div>
+            <div class="form-group" style="border-top: 1px solid #dddddd;margin-top: 5px;">
+                <div class="input-group" style="margin:40px  50px 15px 50px;">
+                <span class="input-group-addon">
+                    <i class="glyphicon glyphicon-user "></i>
+                </span>
+                    <input type="text" class="form-control" id="userId" name="username" placeholder="用户名" required="" autofocus="" style="width:300px;">
+                </div>
+                <div class="input-group" style="margin:15px 50px;">
+                <span class="input-group-addon" style="font-size: 17px;">
+                    <i class=" glyphicon glyphicon-lock"></i>
+                </span>
+                    <input type="password" class="form-control" id="password" name="password"  placeholder="密码" required="" style="width:300px;">
+                </div>
+                <div style="clear: both"></div>
+                <!--  <input class="btn btn-group-sm btn-primary" type="submit" value="login"/>-->
+                <button class="btn btn-group-sm btn-primary" style="margin-left:50px;width:340px;font-size:18px" type="submit">登 录</button>
+            </div>
+            <div style="margin-left:60px;color: red;font-size: 16px;"><%= msg  %></div>
+            <div style="float:right;">
+                <a href="regist" >还没有帐号？</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+
+</html>
+

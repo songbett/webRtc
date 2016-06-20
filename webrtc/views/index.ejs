@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html>
+<% include header.ejs %>
+
+<script>
+//    var dialogId = 1;
+//    var z = 10;
+//    var num = 1;
+//    var idTemp;
+//    function create(id, uId) {
+//        //id是socketId,uId是userId
+//        $("#allChat1").click(function () {
+//            z++;
+//            $("#allChat1").css('z-index', z);
+//        });
+//        if (document.getElementById('pane' + id)) {
+//            $("\#chat" + dialogId + " a[href='\#pane" + id + "']").tab('show');
+//        }
+//        else {
+//            if (num <= 8) {
+//                $('#chat' + dialogId).append(
+//                        "<li id='li" + id + "' style='border:1px solid #e0e0e0;border-radius:5px;background-color:#ffffff' onclick='javascript:flushMsgNum(\"" + id + "\")'>" +
+//                        "<a href='#pane" + id + "' data-toggle='tab'>" +
+//                        "<span class='badge pull-right'></span> " + uId + "</a></li>"
+//                );
+//                num++;
+//                $("#tab-content" + dialogId).append(
+//                        "<div class='tab-pane' id='pane" + id + "'>" +
+//                        "<div id='main" + id + "' class='chatMain' style='float:left;'>" +
+//                        "<div class='ChatHead' id='chatHead" + id + "'>" +
+//                        "<div style='float:left;margin-top:10px;margin-left:10px;'>" +
+//                        "<p >" + uId + "</p>" + "</div>" +
+//                        "<div style='float:right;margin-right: 8px;margin-top:10px;'>" +
+//                        "<button type='button' class='close' aria-hidden='true' style='float:right' id='butt" + id + "'>&times;</button>" +
+//                        "</div>" + "</div>" + "<div id='ChatBody'>" +
+//                        "<div class='ChatContent' id='chat" + id + "'></div>" +
+//                        "<div class='handler'>" +
+//                        "<div class='handlerIcon'><a class='btn_addPic' data-toggle='tooltip' title='上传文件' style='position:relative;'>" +
+//                        "<input id='fileInput' onchange='javascript:sendFileToOther(this,\""+id+"\")' type='file' class='filePrew'/>" +
+//                        "<i class='icon-upload-alt icon-large'></i></a></div>"
+//                        + "<div class='handlerIcon'><a onclick='javascript:setVedioInvitation(\""+id+"\",\""+uId+"\")' data-toggle='tooltip' title='视频'>" +
+//                        "<i class='icon-facetime-video icon-large'></i></a></div>"
+//                        + "<div class='handlerIcon'><a data-toggle='tooltip' title='聊天记录' id='record" + id + "'>" +
+//                        "<i class='icon-time icon-large'></i></a></div>"
+//                        + "</div>"
+//                        + "<div id='ChatBtn" + id + "'>"
+//                        + "<form action='' name='chata" + id + "' method='post'>"
+//                        + "<div>"
+//                        + "<textarea id='ChatText" + id + "' rows='4' cols='66' style='border-color:#e5e5e5;margin-left: 5px;'></textarea>"
+//                        + "</div>"
+//                        + "<div style='padding: 4px 5px 10px;width:100%;margin-top:6px;'>"
+//                        + "<div style='float:right;'>"
+//                        + "<button type='button' class='btn btn-primary' style='width:120px;height:30px;' id='send" + id + "'>发送</button>"
+//                        + "</div>" + "<div style='float:right' >"
+//                        + "<button type='button' class='btn btn-default' style='width:100px;height:30px;margin-right:5px;'id='close" + id + "'>关闭</button>"
+//                        + "</div>" + "<div style='clear:both;'></div>"
+//                        + "</div>" + "</form>" + "</div>" + "</div>" + "</div>" + "</div>"
+//                        + "<div style='clear:both;'></div>");
+//                $("\#chat" + dialogId + " a[href='\#pane" + id + "']").tab('show');
+//                $("#allChat" + dialogId).draggable({ handle: '.ChatHead', containment: 'body' ,scroll: false});
+//                $('#send' + id).click(
+//                        function () {
+//                            var text = $('#ChatText' + id).val();
+//                            var p = document.createElement("p");
+//                            if (text != "" && text.trim() != "") {
+//                                p.innerText = text;
+//                                chat(id, p.innerText);
+//                                $('#ChatText' + id).val("");
+//                            }
+//                            var h = $("#chat" + id).scrollTop();
+//                            $("#chat" + id).scrollTop(h + 500);
+//                        }
+//                );
+//
+//                $(document).keypress(function (event) {
+//                    //enter键发送,ctrl+enter换行
+//                    if (event.ctrlKey && event.keyCode == 10) {
+//                        var text = $('#ChatText' + id).val();
+//                        var newText = text + "\r\n";
+//                        $('#ChatText' + id).val("" + newText);
+//                    }
+//                    else if (event.which == 13) {
+//                        event.preventDefault();
+//                        $('#send' + id).click();
+//                        var h = $("#chat" + id).scrollTop();
+//                        $("#chat" + id).scrollTop(h + 500);
+//                    }
+//                });
+//                /*聊天记录框*/
+//                $("#record" + id).click(function () {
+//                    if ($("#chatRecord" + id).is(":visible")) {
+//                        $("#chatRecord" + id).remove();
+//                        }
+//                    else {
+//                        $("#pane" + id).append(
+//                                "<div class='pull-left' style='height:100%;width:400px;background-color: #f9f9f9;position:absolute;margin-left:500px;z-index:100' id='chatRecord" + id + "'>" +
+//                                "<button type='button' class='close' id='closeRecord" + id + "'><span aria-hidden='true'>&times;</span><span class='sr - only'></span></button>" +
+//                                "<div class='chatRecordPane' style='height:510px;' id='chatRecordSee" + id + "'></div>" +
+//                                "</div>"
+//                        );
+//                        $("#closeRecord" + id).click(
+//                                function () {
+//                                    $("#chatRecord" + id).remove();
+//                                }
+//                        );
+//                        msgRecordShow(id);
+//                    }
+//                });
+//                $(function () {
+//
+//                    $('#close' + id).click(
+//                            function () {
+//                                $('#pane' + id).remove();
+//                                var i = $('#li' + id).parent().parent().parent().attr('id');
+//                                $('#li' + id).remove();
+//                                $("#" + i + "  a:first").tab('show');
+//                                num--;
+//                                $("#chatRecord" + id).remove();
+//                                IndexClient.sendMessage("__shutChat", {socketId: id});
+//                                if(IndexClient.localMediaStream) {
+//                                    IndexClient.removeVedio(id);
+//                                }
+//                            }
+//                    );
+//                    $('#butt' + id).click(
+//                            function () {
+//                                $('#pane' + id).remove();
+//                                var i = $('#li' + id).parent().parent().parent().attr('id');
+//                                $('#li' + id).remove();
+//                                $("#" + i + "  a:first").tab('show');
+//                                num--;
+//                                $("#chatRecord" + id).remove();
+//                                IndexClient.sendMessage("__shutChat", {socketId: id});
+//                                if(IndexClient.localMediaStream) {
+//                                    IndexClient.removeVedio(id);
+//                                }
+//                            }
+//                    );
+//                });
+//                idTemp = id;
+//            }
+//
+//            if (num > 8) {
+//                dialogId++;
+//                z++;
+//                createDialog();
+//                create(idTemp, uId);
+//            }
+//        }
+//        function createDialog() {
+//            $(document.body).append(
+//                    "<div class='chatDiv' id='allChat" + dialogId + "'>"
+//                    + "<div id='dialogContain' style='float: left;height: 100%;'>"
+//                    + "<ul class='nav nav-pills nav-stacked' id='chat" + dialogId + "'>"
+//                    + "<li>&nbsp;</li>"
+//                    + "<li>&nbsp;</li>"
+//                    + "<li>&nbsp;</li>"
+//                    + "</ul>" + "</div>"
+//                        <!-- Tab panes -->
+//                    + "<div style='float:left;'>"
+//                    + "<div class='tab-content' id='tab-content" + dialogId + "'>"
+//                    + "</div>" + "</div>"
+//                    + "<div style='clear:both;'></div>" + "</div>"
+//            );
+//            $('#allChat' + dialogId).css('z-index', z);
+//            $('#allChat' + dialogId).click(function () {
+//                z++;
+//                $('#allChat' + dialogId).css('z-index', z);
+//            });
+//            num = 0;
+//        }
+//    }
+</script>
+
+<script>
+    function chat(id, text) {
+        var d = new Date();
+        var vYear = d.getFullYear();
+        var vMon = d.getMonth() + 1;
+        var vDay = d.getDate();
+        var h = d.getHours();
+        var m = d.getMinutes();
+        var se = d.getSeconds();
+        var s = vYear + "-" + (vMon < 10 ? "0" + vMon : vMon) + "-" + (vDay < 10 ? "0" + vDay : vDay) + " " + (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (se < 10 ? "0" + se : se);
+        $('#chat' + id).append(
+                "<div style='width:100%;'>" +
+                "<div style='float:right'><p>" + s + "</p></div>" +
+                "<div style='clear:both;'></div>" +
+                "<div id='chatContent" + id + "' style='float:right;'>" +
+                " <ul class='media-list'>" +
+                "  <li class='media'>"
+                + "<div>" +
+                "<div style='width:35px;height: 35px;float:right;'>" +
+                "<a class='pull-left' href='#'>" +
+                "<img src='/images/1.jpg'  class='img-responsive' alt='头像'>" +
+                " </a>" +
+                "</div>" +
+                "<div class='popover left' style='display:block;position: relative;'>" +
+                "<div class='arrow'></div>" +
+                "<div class='popover-content'>" +
+                "<p>" + text + "</p>" +
+                " </div>" +
+                "</div>" +
+                "<div class='media-body'>" +
+                "</div>" +
+                "</div>" +
+                "</li>" +
+                "</ul>" +
+                "</div>" +
+                "</div>"
+                + "<div style='clear:both;'></div>");
+        IndexClient.sendTextMessage(JSON.stringify({"time": s, "msg": text}), id);
+        //保存通话记录
+        var sender = $('#userId').text();
+        var receiver = $('li#' + id).attr('name');
+        IndexClient.sendMessage('one_record', {id: sender + receiver, msg: text, sender: sender, time: s});
+        //同步到记录面板
+        if ($('#chatRecord' + id).is(':visible') == true) {
+            chatRecord(id, JSON.stringify({"time": s, "msg": text}));
+        }
+    }
+
+    //我--聊天记录
+    function chatRecord(id, text) {
+        var data = JSON.parse(text);
+        $('#chatRecordSee' + id).append(
+                "<div style='width:100%;'>" +
+                "<div style='float:right'><p>" + data.time + "</p></div>" +
+                "<div style='clear:both;'></div>" +
+                "<div id='recordContent" + id + "' style='float:right;'>" +
+                " <ul class='media-list'>" +
+                "  <li class='media'>"
+                + "<div>" +
+                "<div style='width:35px;height: 35px;float:right;'>" +
+                "<a class='pull-left' href='#'>" +
+                "<img src='/images/1.jpg'  class='img-responsive' alt='头像'>" +
+                " </a>" +
+                "</div>" +
+                "<div class='popover left' style='display:block;position: relative;'>" +
+                "<div class='arrow'></div>" +
+                "<div class='popover-content'>" +
+                "<p>" + data.msg + "</p>" +
+                " </div>" +
+                "</div>" +
+                "<div class='media-body'>" +
+                "</div>" +
+                "</div>" +
+                "</li>" +
+                "</ul>" +
+                "</div>" +
+                "</div>"
+                + "<div style='clear:both;'></div>");
+
+        var h = $("#chatRecordSee" + id).scrollTop();
+        $("#chatRecordSee" + id).scrollTop(h + 500);
+    }
+</script>
+
+<script>
+    /*关闭shipin*/
+    function closeVedio(id) {
+        $("#vedio" + id).remove();
+    }
+
+    /*关闭shipin*/
+    function closeMyVedio(id) {
+        $("#MMvedio" + id).remove();
+        if(IndexClient.localMediaStream) {
+            IndexClient.removeVedio(id);
+        }
+    }
+    /***视频***/
+    function setVedioInvitation(id)
+    {
+        if(!document.getElementById("vedio"+id)) {
+            $("#pane" + id).append("<div id='vedio" +id + "' style='height:200px;width:400px;position:absolute;margin-left:500px;'>"+
+                    "<button type='button' class='close' onclick='closeMyVedio(\"" + id + "\")'>" +
+                    "<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>" +
+                    "<video id='myVedio" + id + "' class='remoteVedio' muted='true' style='width: 100%;min-height: 100%' autoplay></video></div>");
+
+            $("#pane" + id).append("<div id='MMvedio"+IndexClient.socket.id +"' style='height:200px;width:400px;position: absolute;margin-left:500px;margin-top:250px;'>" +
+                    "<button type='button' class='close' onclick='closeMyVedio(\"" + IndexClient.socket.id + "\")'>" +
+                    "<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>" +
+                    "<video id='myVedio" + IndexClient.socket.id + "' class='remoteVedio' muted='true' style='width: 100%;min-height: 100%' autoplay></video></div>");
+            IndexClient.sendVedioInvitation(id, $('#userId').text(), function (stream) {
+                //弹出stream窗口
+                //alert(id);
+                IndexClient.attachStream(stream, 'myVedio' + IndexClient.socket.id);
+            });
+        }
+    }
+    $(function(){
+        $("#vedioContain").draggable();
+    });
+
+    /**
+     * 文件 hp
+     */
+    function sendFileToOther(dom,socketId)
+    {
+        //alert(dom.files[0].name);
+        IndexClient.sendFileToOther(dom,socketId);
+    }
+</script>
+
+<script>
+    function getChat(id, text) {
+        var data = JSON.parse(text);
+        $('#chat' + id).append(
+                "<div style='width:100%;'>" +
+                "<div style='float:left'><p>" + data.time + "</p></div>" +
+                "<div style='clear:both;'></div>" +
+                "<div style='width:100%;'>" +
+                "<div id='chatContent" + id + "' style='float:left;'>" +
+                " <ul class='media-list'>" +
+                "  <li class='media'>"
+                + "<div>" +
+                "<div style='width:35px;height: 35px;float:left;'>" +
+                "<a class='pull-left' href='#'>" +
+                "<img src='/images/1.jpg'  class='img-responsive' alt='头像'>" +
+                " </a>" +
+                "</div>" +
+                "<div class='popover right' style='display:block;position: relative;'>" +
+                "<div class='arrow'></div>" +
+                "<div class='popover-content'>" +
+                "<p>" + data.msg + "</p>" +
+                " </div>" +
+                "</div>" +
+                    /*   " </div>" +*/
+                "<div class='media-body'>" +
+                "</div>" +
+                "</div>" +
+                "</li>" +
+                "</ul>" +
+                "</div>" +
+                "</div>"
+                + "<div style='clear:both;'></div>");
+        var h = $("#chat" + id).scrollTop();
+        $("#chat" + id).scrollTop(h + 500);
+    }
+    //对方--聊天记录
+    function getChatRecord(id, text) {
+        var data = JSON.parse(text);
+        $('#chatRecordSee' + id).append(
+                "<div style='width:100%;'>" +
+                "<div style='float:left'><p>" + data.time + "</p></div>" +
+                "<div style='clear:both;'></div>" +
+                "<div style='width:100%;'>" +
+                "<div id='recordContent" + id + "' style='float:left;'>" +
+                " <ul class='media-list'>" +
+                "  <li class='media'>"
+                + "<div>" +
+                "<div style='width:35px;height: 35px;float:left;'>" +
+                "<a class='pull-left' href='#'>" +
+                "<img src='/images/1.jpg'  class='img-responsive' alt='头像'>" +
+                " </a>" +
+                "</div>" +
+                "<div class='popover right' style='display:block;position: relative;'>" +
+                "<div class='arrow'></div>" +
+                "<div class='popover-content'>" +
+                "<p>" + data.msg + "</p>" +
+                " </div>" +
+                "</div>" +
+                    /*   " </div>" +*/
+                "<div class='media-body'>" +
+                "</div>" +
+                "</div>" +
+                "</li>" +
+                "</ul>" +
+                "</div>" +
+                "</div>"
+                + "<div style='clear:both;'></div>");
+        var h = $("#chatRecordSee" + id).scrollTop();
+        $("#chatRecordSee" + id).scrollTop(h + 500);
+    }
+</script>
+
+<script xmlns="http://www.w3.org/1999/html">
+    $(function () {
+        $("#onlineUsers").css("display", "none");
+        $("#contact_msg").css("display", "none");
+        $("#messageNum").mouseover(function () {
+            $("#contact_msg").show();
+        });
+        $('#contact_msg').mouseleave(function () {
+            $("#contact_msg").hide();
+        });
+
+        $("#invitations").css("display", "none");
+        $("#invitationNum").mouseover(function () {
+            $("#invitations").show();
+        });
+        $('#invitations').mouseleave(function () {
+            $("#invitations").hide();
+        });
+        $(document).mousemove(function (e) {
+            if ($(window).width() - e.pageX < 50) {
+                $('#onlineUsers').show();
+            }
+            else if ($(window).width() - e.pageX > 250) {
+                $('#onlineUsers').hide();
+            }
+        });
+        /*------hide------*/
+        $("#joinroomeffect").hide();
+        $("#pop").hide();
+
+        $("#logina").remove();
+        $("#regista").remove();
+        $("#user").children().append("<p><%=userId%></p>");
+        /*------effect------*/
+        function runEffect(name) {
+            $(name).toggle("clip", 400);
+        }
+
+        /*------click------*/
+        $("#apply").click(function () {
+            var	w	=	window.open();
+            $.ajax({
+                type: "POST",
+                url: '/meeting',
+                success: function (data) {
+                    if (data.success) {
+                        var href = "/room?roomId=" + data.roomId;
+                        setTimeout(function(){w.location='https://' + window.location.host + href;}, 0);
+                    } else {
+                        alert("Sorry Error!!");
+                        location.reload();
+                    }
+                }
+            });
+
+        });
+    });
+
+</script>
+
+<div class="chatDiv" id="allChat1" >
+    <div id='dialogContain' style="float: left;height: 100%;">
+        <ul class="nav nav-pills nav-stacked" id="chat1">
+            <li>&nbsp;</li>
+            <li>&nbsp;</li>
+            <li>&nbsp;</li>
+        </ul>
+    </div>
+    <div style="float: left;">
+        <div class="tab-content " id="tab-content1">
+
+        </div>
+    </div>
+</div>
+
+
+<div id="popupbg" class="popupbg"></div>
+<div id="onlineUsers" class="list-group" id="mainPane"
+     style="width:200px;float:right;position:absolute;right:0px;top:135px;z-index: 100;border:1px solid #e5e5e5;">
+    <li class="list-group-item active onlineUser"><p style="font-size:18px;font-style:italic;">在线联系人</p></li>
+</div>
+<div style=" background-image:url('/images/tour_bg.jpg');background-size:auto 100%;height:92.5%">
+    <main class="bs-masthead" id="content" role="main">
+        <div class="container">
+            <table border="0" width="100%">
+                <tr>
+                    <td width="80%" style="margin-top:80px;">
+                        <div>
+                            <div style="margin:0 auto;">
+                                <h1 id="userId" hidden="hidden"><%= userId %></h1>
+
+                                <div style="margin-top: 60px;">
+                                    <ul class="thumbnails" style="list-style:none;">
+                                        <li class="span4">
+                                            <div class="thumbnail">
+                                                <div class="caption">
+                                                    <h3>我的消息 <a><span class="badge" id="messageNum">0</span></a></h3>
+
+                                                    <p>点击数字查看您的联系人向您发送的消息。</p>
+
+                                                    <div id="contact_msg"></div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="span4">
+                                            <div class="thumbnail">
+                                                <div class="caption">
+                                                    <h3>我的会议 <a><span class="badge" id="invitationNum">0</span></a>
+                                                        <a
+                                                                id="apply" type="submit"
+                                                                style="font-size:8px;color:#00B7FF">&nbsp;&nbsp;召开会议</a>
+                                                    </h3>
+
+                                                    <p>点击数字查看您被邀请的会议参与信息。</p>
+
+                                                    <div id="invitations"></div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="span4">
+                                            <div class="thumbnail">
+                                                <div class="caption">
+                                                    <h3>我的邮件 <a><span class="badge">0</span></a></h3>
+
+                                                    <p>点击数字查看您的邮件信息。</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </main>
+
+    <!--新加函数-->
+    <script>
+
+        function msgRecordShow(id) {
+            var sender = $('#userId').text();
+            var receiver = $('li#' + id).attr('name');
+            //清空消息记录面板的内容
+            $('#chatRecordSee' + id).html('');
+            IndexClient.sendMessage("get_oneRecord", {SRId: "" + sender + receiver, id: id});
+        }
+        //刷新联系人的消息数
+        function flushMsgNum(id) {
+            //alert(''+id);
+            $('li#li' + id + ' span').html("");
+            if (typeof (lost_focus_msg_num[id]) != "undefined") {
+                lost_focus_msg_num[id] = 0;
+            }
+
+        }
+        //////联系人信息显示////////
+        function contactShow() {
+            //用户待接收消息总数
+            var message_num = 0;
+
+            for (var i in off_line_msg_num) {
+                if (typeof (off_line_msg_num[i]) != "undefined" && off_line_msg_num[i] != 0) {
+                    message_num += off_line_msg_num[i];
+                }
+            }
+            $('#messageNum').html('' + message_num);
+        }
+
+        function addContact(id) {
+            var sender = $('li#' + id).attr('name');
+            var num;
+            if (typeof (off_line_msg_num[id]) != "undefined" && off_line_msg_num[id] != 0) {
+                num = off_line_msg_num[id];
+            }
+            if ($('#contact_msg' + ' p#' + id).length <= 0)
+                $('#contact_msg').append('<p id="' + id + '" onclick="javascript:setInviteChat(\'' + id + '\',\'' + sender + '\')">' + sender + '：给你发送了' + '<span></span>' + '条消息！' + '</p>');
+            else
+                $('#contact_msg' + ' p#' + id + ' span').html('' + num);
+        }
+        function delContact(id) {
+            $('#contact_msg' + ' p#' + id).remove();
+        }
+
+    </script>
+
+    <% include footer.ejs %>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/indexroom.js"></script>
+    <script src="/javascripts/clearjs/clear-index.js"></script>
+    <script src="/javascripts/clearjs/indexClient-event.js"></script>
+    <script>
+
+      //  var IndexClient = indexClient();
+
+
+        //            单人聊天                  //
+
+//        var setInviteChat= function (socketId,userId) {
+//            //socketId和userId都是列表中用户的，而不是本窗口的
+//            //显示对话框
+//            create(socketId,userId);
+//            //发信令
+//            IndexClient.sendMessage("__setInviteChat",{socketId:socketId});
+//            if (typeof (off_line_msg_num[socketId]) == "undefined" || off_line_msg_num[socketId] == null) {
+//                off_line_msg[socketId] = [];
+//                off_line_msg_num[socketId] = 0;
+//                lost_focus_msg_num[socketId] = 0;
+//            }
+//            else if (off_line_msg_num[socketId] != 0) {
+//                for (var i = 0; i < off_line_msg[socketId].length; i++) {
+//                    getChat(socketId, off_line_msg[socketId][i]);
+//                }
+//                off_line_msg[socketId] = [];
+//                off_line_msg_num[socketId] = 0;
+//                lost_focus_msg_num[socketId] = 0;
+//                $('li#' + socketId + ' span').html("");
+//                $('li#li' + socketId + ' span').html("");
+//                delContact(socketId);
+//                contactShow();
+//            }
+//        };
+
+        IndexClient.on('pc_add_stream', function (stream,socketId){
+            alert("1");
+            IndexClient.attachStream(stream,'someVedio'+socketId);
+        });
+
+
+
+        IndexClient.on('vedioInvitation',function(data){
+            if(confirm("收到"+data.userId+"的视频邀请，是否接受"))
+            {
+                if(!document.getElementById("vedio"+data.senderSocketId)){
+                    IndexClient.acceptVedioInvitation(data.senderSocketId,{
+                        "video": true,
+//                        {
+//                            mandatory: {
+//                                minWidth: 1280,
+//                                minHeight: 720
+//                            }
+//                        },
+                        "audio": true
+                    },function(stream){
+                        create(data.senderSocketId, data.userId);
+                        $("#pane" + data.senderSocketId).append("<div id='vedio" + data.senderSocketId + "' style='height:200px;width:400px;position: absolute;margin-left:500px;'>" +
+                                "<button type='button' class='close' onclick='closeMyVedio(\"" +data.senderSocketId
+                                + "\")'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>" +
+                                "<video id='someVedio" + data.senderSocketId + "' muted='true' class='remoteVedio' style='width: 100%;min-height: 100%' autoplay></video></div>");
+                        $("#pane" + data.senderSocketId).append("<div id='MMvedio" +data.socketId+"'  style='height:200px;width:400px;position: absolute;margin-left:500px;margin-top:250px;'>" +
+                                "<button type='button' class='close' onclick='closeMyVedio(\"" + data.socketId
+                                + "\")'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>" +
+                                "<video id='myVedio" + data.socketId + "' muted='true' class='remoteVedio' style='width: 100%;min-height: 100%' autoplay></video></div>");
+
+                        IndexClient.attachStream(stream, 'myVedio' + data.socketId);
+                    });
+                }
+            }
+            else{
+                IndexClient.refuseVedioInvitation(data.senderSocketId,$('#userId').text());
+            }
+        });
+
+        IndexClient.on('vedioInvitationRefuse',function(data){
+            alert("视频邀请"+data.userId+"被拒绝");
+        });
+
+        //被邀请者数据通道建立后的初始化
+        IndexClient.on('getInviteChat', function (socketId) {
+            off_line_msg[socketId] = [];
+            off_line_msg_num[socketId] = 0;
+            lost_focus_msg_num[socketId] = 0;
+        });
+
+        IndexClient.on('data_channel_message', function (channel,socketId,message) {
+            if (document.getElementById('pane' + socketId) && document.getElementById('li' + socketId)) {
+                getChat(socketId, message);
+                if ($('#pane' + socketId).is(':visible') == false) {
+                    lost_focus_msg_num[socketId] += 1;
+                    $('li#li' + socketId + ' span').html("" + lost_focus_msg_num[socketId]);
+                }
+                else {
+                    lost_focus_msg_num[socketId] = 0;
+                    $('li#li' + socketId + ' span').html("");
+                    //同步到记录面板
+                    if ($('#chatRecord' + socketId).is(':visible') == true) {
+                        getChatRecord(socketId, message);
+                    }
+                }
+            }
+            else {
+                off_line_msg_num[socketId] += 1;
+                off_line_msg[socketId].push(message);
+                $('li#' + socketId + ' span').html("" + off_line_msg_num[socketId]);
+                addContact(socketId);
+                contactShow();
+            }
+            //保存通话记录
+            var data = JSON.parse(message);
+            var sender = $('#userId').text();
+            var receiver = $('li#' + socketId).attr('name');
+            IndexClient.sendMessage('one_record', {id: sender + receiver, msg: data.msg, sender: receiver, time: data.time});
+        });
+
+        IndexClient.on('one_messageRecord', function (data) {
+            var message=data.msg;
+            for (var i in message) {
+                var json = JSON.parse(message[i]);
+                if (json.sender == $('#userId').text()) {
+                    chatRecord(data.id, message[i]);
+                }
+                else {
+                    getChatRecord(data.id, message[i]);
+                }
+
+            }
+        });
+
+        var getInvitations = function () {
+            $.ajax({
+                type: "POST",
+                url: '/getInvitations',
+                success: function (data) {
+                    if (data.success) {
+                        var div = document.getElementById("invitations");
+                        while (div.hasChildNodes()) //当div下还存在子节点时 循环继续
+                        {
+                            div.removeChild(div.firstChild);
+                        }
+
+                        if (data.invitations.length != 0) {
+                            var invitationNumber = 0;
+                            for (var i = 0; i < data.invitations.length; i++) {
+                                if (data.invitations[i].invitationOver == '0' && data.invitations[i].invitationAccept == '0') {
+
+                                    $('#invitations').append('<p>' + '您被邀请参加' + '<a href="' + '/room?roomId=' + data.invitations[i].roomId
+                                            + '">' + data.invitations[i].senderId + '的视频会议' + '</a>' + data.invitations[i].invitationTime + '</p>');
+                                    invitationNumber++;
+                                }
+                                else if (data.invitations[i].invitationAccept == '0') {
+                                    $('#invitations').append('<p>' + '您被邀请参加' + data.invitations[i].senderId + '的视频会议  ' + '已结束' + '</p>');
+                                    invitationNumber++;
+                                }
+                            }
+                            $('#invitationNum').text(invitationNumber);
+                        }
+
+                    } else {
+                        alert("Sorry Error!!");
+                        $("#cancel1").click();
+                    }
+                }
+            });
+        };
+
+        getInvitations();
+        IndexClient.on('getInvitations', function () {
+            getInvitations();
+        });
+
+
+
+//        IndexClient.on('someone_login', function (data) {
+//            //如果当前窗口的id等于广播的id，说明该窗口就是登录窗口，什么都不用做；如果不是登录窗口，则要让该窗口执行getOnlineUsers，来获得已登录用户列表
+//            if(data.userId===$("#userId").text()){
+//                //还不懂
+//                //window.location.replace("https://"+window.location.host+'/NotFound');
+//                console.log("已经");
+//            }
+//            else{
+////                add(data);
+//                console.log("后来");
+//                getOnlineUsers();
+//            }
+//        });
+
+        IndexClient.on('someone_logout', function (data) {
+           $('#'+data).remove();
+            $('#li'+data).remove();
+            $('#pane'+data).remove();
+        });
+
+
+
+        IndexClient.login("https://" + window.location.host, {roomId: 'Index', userId: $('#userId').text()});
+
+    </script>
+</div>
+</html>

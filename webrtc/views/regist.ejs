@@ -1,0 +1,109 @@
+<!-- <!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Sign Up</title>
+    <link type="text/css" rel="stylesheet" href="stylesheets/sign.css">
+    <link type="text/css" rel="stylesheet" href="stylesheets/common.css">
+</head>
+
+<body>
+<div id="content">
+    <form style="margin-top:70px;" action="/regist" method="post">
+        <div class="form_line">
+            <div class="form_label">邮箱：</div>
+            <input type="text" name="email"/>
+        </div>
+        <div class="form_line">
+            <div class="form_label">登录名：</div>
+            <input type="text" name="username"/>
+        </div>
+        <div class="form_line">
+            <div class="form_label">密码：</div>
+            <input type="password" name="password"/>
+        </div>
+        <div class="form_line">
+            <div class="form_label"></div>
+            <button class="button gray" type="submit">注册</button>
+            <button class="button gray" type="reset">取消</button>
+        </div>
+    </form>
+</div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name='keywords' content='WebRTC, HTML5, JavaScript' />
+    <meta name='description' content='WebRTC Reference App' />
+    <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1'>
+    <base target='_blank'>
+    <title>WebRTC client</title>
+    <link rel='stylesheet' href='stylesheets/css/bootstrap.min.css' />
+</head>
+<body>
+    <div class="container">
+        <div style="width:700px;margin:0 auto;border:1px solid #dddddd;background-color:#fbfbfb;margin-top:40px;">
+            <form class="form-horizontal wt-form ng-pristine ng-invalid ng-invalid-required" role="form" method="post"
+                  target="_self" style="margin:40px 20px;">
+                <div class="single-panel-header">
+                    <h1>注册账号</h1>
+                    <DIV style="BACKGROUND:#dddddd; OVERFLOW: hidden; HEIGHT: 3px">&gt;</DIV>
+                </div>
+                <div style="border-top:1px solid #dddddd;margin:5px 0px;">
+                    <div style="padding:20px 20px;">
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">用户名：</label>
+
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control" id="userId" name="username" placeholder="用户名"
+                                       required="" style="width:500px;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label"> 邮箱：</label>
+
+                            <div class="col-xs-10">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="邮箱地址"
+                                       required="" autofocus="" style="width:500px;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label"> 密码：</label>
+
+                            <div class="col-xs-10">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="密码"
+                                       required="" style="width:500px;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">重复密码：</label>
+
+                            <div class="col-xs-10">
+                                <input type="password" class="form-control" id="password-repeat" name="password-repeat"
+                                       placeholder="重复密码" required="" style="width:500px;">
+                            </div>
+                        </div>
+                        <div style="margin-left:120px;color: red;font-size: 16px;"><%= msg  %></div>
+                        <div style="margin:20px 0px 20px 110px;">
+                            <div style="float:left;">
+                                <p>已有账号?</p>
+                            </div>
+                            <div id="register">
+                                <a href="/login"> 立即登录!</a>
+                            </div>
+                        </div>
+                        <div style="margin-left: 110px;">
+                            <button class="btn btn-group-sm btn-primary " type="submit"
+                                    style="width:150px;font-size:18px; ">注 册
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>             

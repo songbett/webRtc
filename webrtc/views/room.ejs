@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="zh-CN" >
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title><%= roomId %></title>
+    <link rel='stylesheet' href='/stylesheets/mycss.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css'/>
+    <link rel='stylesheet' href='/stylesheets/bootstrap-theme.css'/>
+    <link rel='stylesheet' href='/stylesheets/myStyle.css'/>
+    <link rel='stylesheet' href='/stylesheets/font-awesome.min.css'/>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/meetingroom.js"></script>
+    <script src='/javascripts/commonJS/jquery-1.10.2.js'></script>
+    <script src='/javascripts/commonJS/jquery-ui-1.8.20.min.js'></script>
+    <script src='/javascripts/commonJS/bootstrap.min.js'></script>
+
+</head>
+<body id="body" onscroll="scroll()">
+<script type="text/javascript" src='/javascripts/myjs/draw.js'></script>
+<script type="text/javascript" src='/javascripts/myjs/view.js'></script>
+<script type="text/javascript" src='/javascripts/myjs/socket.js'></script>
+
+<div class="contain">
+    <div class="header"><h1 id="userId" class="room-h1"><%= userId %></h1></div>
+    <!--/****My new code section****/-->
+    <div id="topSide" class="btn-group">
+        <div class="topSlideVideoBtn">
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="远程控制"
+                    class="btn btn-lg icon-large icon-magic item" onclick=""></button>
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="屏幕共享/回到视频"
+                    class="btn btn-lg icon-large icon-desktop item" onclick="screenShare(this)"></button>
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="会议锁"
+                    class="btn btn-lg icon-large icon-unlock item" onclick="roomLocked(this)"></button>
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="群聊"
+                    class="btn btn-lg icon-large icon-comments item" onclick="showChat()"></button>
+            <!--<button data-toggle="tooltip" data-placement="bottom"  data-original-title="Online Users" class="btn btn-lg icon-large icon-group item" onclick="showOnlineUser()"></button>-->
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="暂停/恢复"
+                    class="btn btn-lg icon-large icon-pause item" onclick="stopLocalMediaStream(this)"></button>
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="白板"
+                    class="btn btn-lg icon-large icon-edit item" onclick="addcanvas()"></button>
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="退出"
+                    class="btn btn-lg icon-large icon-off item" onclick="exitRoom()"></button>
+
+        </div>
+
+        <div class= "topSlideWriteboardBtn" hidden="true" >
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="刷新"
+                    class="btn btn-lg icon-large icon-refresh item" onclick="refresh()"></button>
+
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="文档浏览"
+                    class="btn btn-lg icon-large icon-file item" id="showpdflist"></button>
+
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="涂鸦"
+                    class="btn btn-lg icon-large icon-pencil item" onclick="pencil()"></button>
+
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="圆形"
+                    class="btn btn-lg icon-large icon-circle item" onclick="circle()"></button>
+
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="直线"
+                    class="btn btn-lg icon-large icon-minus item" onclick="line()"></button>
+
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="矩形"
+                    class="btn btn-lg icon-large icon-th item" onclick="square()"></button>
+
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="清空画布"
+                    class="btn btn-lg icon-large icon-repeat item" onclick="writeboard()"></button>
+
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="退出白板"
+                    class="btn btn-lg icon-large icon-arrow-left item" onclick="exitWriteboard()"></button>
+
+            <button data-toggle="tooltip" data-placement="bottom" data-original-title="退出房间"
+                    class="btn btn-lg icon-large icon-off item" onclick="exitRoom()"></button>
+            <input type="color" id="color">
+
+        </div>
+
+    </div>
+
+    <div>
+        <video class="myVedio" id="me" muted="true" autoplay></video>
+    </div>
+
+    <div class="pdf"></div>
+    <div class="writeboard" id="writeboard"></div>
+    <div class="pdfBtn" hidden="true">
+        <button id="last" class="btn btn-lg icon-large icon-chevron-left" style="width:220px;height:130px;"></button>
+        <button id="next" class="btn btn-lg icon-large icon-chevron-right" style="width:220px;height:130px;"></button>
+    </div>
+    <div id="leftSide" hidden="true" class="leftSide">
+        <div id="leftSlide" class="list-group">
+            <li class="list-group-item leftSlideItem">在线用户</li>
+        </div>
+    </div>
+
+    <div class="modal-content chat-content" hidden="true" id="chatContent">
+        <div id="rightSlide">
+            <div>
+
+                <div class="modal-header">
+                    <button type="button" id="chatclose" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h5 class="modal-title">群聊</h5>
+                </div>
+                <div class="msg" id="mgs"></div>
+                <div class="history">
+                    <button id="cancelRecordBtn" class="icon-remove-sign icon-large close-history"></button>
+                    <div id="msgRec" class="history-record"></div>
+                </div>
+                <div id="sendFile" hidden="true" class="file">
+                    <div class="btn btn-xs" style="background:rgba(2,0,2,0.3)">
+                        <span style="opacity:1;color:black" class="icon-upload-alt"></span>
+                        <span style="opacity:1;color:black">上传文件</span>
+                        <input type="file" id="fileInput" class="fileInput"
+                               style="position:absolute; left:0; top:0;opacity: 0;">
+                        </a>
+                    </div>
+                    <div id="progressbar" style="display: none" class="progress progress-striped active">
+                        <div style="background-color:rgba(0,0,0,0.3);width: 100%" class="progress-bar"
+                             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+
+                        </div>
+                    </div>
+                    <!--<button id="sendFileBtn" class="sendFileBtn">发送文件</button>-->
+                    <div id="files">
+                        <ul id="sharedFile">
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="modal-body chat-record-body">
+                <div style="width: 100%">
+                    <div style="margin-bottom: 0px;background-color: rgba(0,0,0,0.2); width: 100%;height:2px"></div>
+                    <button id="sendBtn" class="icon-reply icon-large sendBtn "></button>
+                    <button id="recordBtn" class="icon-time icon-large sendBtn"></button>
+
+                    <button id="fileBtn" class="icon-folder-open icon-large sendBtn"></button>
+                    <!--                     <textarea> 标签定义多行的文本输入控件-->
+                    <textarea id="msgIpt" cols="20" class="chat-record"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 文档浏览列表 -->
+    <div class="pdf-file" hidden="true" id="pdflist">
+        <div id="rightSlide">
+            <div>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="pdfclose"
+                            onclick="hidepdflist()">&times;</button>
+                    <h5 class="modal-title">显示文档</h5>
+                </div>
+                <div id="sendfile" hidden="true" class="pdffile" >
+                    <div class="btn btn-xs" style="background:rgba(2,0,2,0.3)">
+                        <span style="opacity:1;color:black" class="icon-upload-alt"></span>
+                        <span style="opacity:1;color:black">上传文件</span>
+                        <input type="file" id="pdfload" class="pdfload"
+                               style="position:absolute; left:0; top:0;opacity: 0;">
+                    </div>
+                    <div id="progressbar_pdf" style="display: none;position:relative; top:-20;left:130;" class="progress progress-striped active">
+                        <div style="background-color:rgba(0,0,0,0.3);width: 100%" class="progress-bar"
+                             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                    <div id="filelist">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="remoteVedios" class="remoteContains">
+        <!--/****My new code section****/-->
+        <div id='container-local' class='remoteContainer'>
+            <video onclick='javascript:clickVedio(this);' muted='true' class='remoteVedio' id='localVedio'
+                   autoplay></video>
+            <div class="nameBanner"><%= userId %></div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $('.btn-group').tooltip({
+        selector: "[data-toggle=tooltip]",
+        container: "body"
+    });
+
+
+    var mgs = document.getElementById("mgs");
+    var msgRec = document.getElementById("msgRec");
+    var sendBtn = document.getElementById("sendBtn");
+    var recordBtn = document.getElementById("recordBtn");
+    var cancelRecordBtn = document.getElementById("cancelRecordBtn");
+    var isVolumeMuted = false;
+    var isScreenShared = false;
+    var isLocalMediaStop = false;
+    var isChatfile=false;
+    /****My new code section****/
+
+    $(document).ready(function () {
+
+
+
+
+
+        $(document).mousemove(function (e) {
+            //$("h1").text(e.pageX + ", " + e.pageY);
+            var body = document.getElementById("body");
+            if (e.pageY < 50 + body.scrollTop) {
+                $('.btn-group').show();
+            }
+            else {
+                $('.btn-group').hide();
+            }
+
+            if (e.pageX < 20) {
+                $('#leftSide').show();
+            }
+            else if (e.pageX > 200) {
+                $('#leftSide').hide();
+            }
+
+        });
+
+        $(document).keydown(function (e) {
+            //enter发送，ctrl+enter换行
+            if (e.ctrlKey && e.which == 13) {
+                var msgIpt = document.getElementById("msgIpt"),
+                        msg = msgIpt.value;
+                var newm=msg+"\r\n"
+                $("#msgIpt").val(newm);
+            }
+            else if (e.which == 13) {
+                e.preventDefault();
+                $('#sendBtn').click();
+                //alert("keyboard");
+            }
+        });
+
+        $('#fileBtn').click(function () {
+            $('#sendFile').toggle("clip", 400);
+        });
+
+        $('#chatclose').click(function () {
+            $('#chatContent').toggle("clip", 400);
+        });
+
+        $("#showpdflist").click(function(){
+            $(".filename").remove();
+            $("#pdflist").toggle("clip", 400);
+            for(var i=0;i<file.length;i++)
+            {
+                $('#filelist').append(file[i]);
+            }
+            $("#sendfile").show();
+        });
+
+        $("#pdfload").change(function(){
+            isChatfile = false;
+            //点击选择文件之后直接上传
+            MeetingClient.sendFileToServer("pdfload", $('title').text(), $('#userId').text(), "progressbar_pdf");
+        });
+
+        $('#fileInput').change(function () {
+            //点击选择文件之后直接上传
+            isChatfile = true;
+            MeetingClient.sendFileToServer("fileInput", $('title').text(), $('#userId').text(), "progressbar");
+        })
+    });
+
+    function showChat() {
+        $('#chatContent').toggle("clip", 400);
+        $('#sendFile').hide();
+        $('.history').hide();
+    }
+
+    function exitRoom() {
+        alert("是否退出视频");
+        window.close();
+    }
+
+    function showOnlineUser() {
+        $('#leftSide').toggle("blind", 400);
+    }
+
+    function roomLocked(button) {
+        //周一做～～～
+        //$('#me')[0].muted = !$('#me')[0].muted;
+        $(button).toggleClass('icon-lock');
+        $(button).toggleClass('icon-unlock');
+        return false;
+    }
+
+    function clickVedio(vedio) {
+        //alert('ok');
+        document.getElementById('me').src = vedio.src;
+    }
+
+    function removeVedio(socketId) {
+        if(confirm("确认踢出用户？")){
+            MeetingClient.removeUser(socketId);
+        }
+        //alert(socketId);
+        $('#container-' + socketId).remove();
+    }
+
+    function remoteMuted(socketId, button) {
+        $(button).toggleClass('icon-volume-off');
+        $(button).toggleClass('icon-volume-up');
+        $('#remote-' + socketId)[0].muted = !$('#remote-' + socketId)[0].muted;
+    }
+
+    /************************文字聊天部分*****************************/
+        //发送事件
+    sendBtn.onclick = function (event) {
+        var msgIpt = document.getElementById("msgIpt"),
+                msg = msgIpt.value, //得到文本内容
+                p = document.createElement("p");
+        //输入内容为空则反馈提示
+        if (msg === null || msg === "" || msg.trim() === null || msg.trim() === "") {
+            alert("发送内容不为空！");
+        }
+        else {
+            //时间
+            var rtime = new Date();
+            var ntime = (rtime.getYear() + 1900) + '/' + (rtime.getMonth() + 1) + '/' +
+                    rtime.getDate() + ' ' + rtime.getHours() + ':' + rtime.getMinutes() + ':' + rtime.getSeconds();
+            p.innerHTML = msg;
+            var msgs = '<div style="font-weight: bold;text-align:right;margin-right:15px;margin-top: 5px">' + '<text style="font-weight:normal">' + ntime + '</text>' + '&nbsp;&nbsp;' + $('#userId').text() + '</div>' +
+                    '<div class=\"popover bottom msg-record2\" style=\"margin-bottom: 5px;\">' +
+                    '<div class=\"arrow\" style="left: 90%"></div> <div class=\"popover-content\"><p style="margin: 0px">' + p.innerHTML + '</p></div></div>'
+            //广播消息
+            var json = {'time': ntime, 'sender': $('#userId').text(), 'msg': msg};
+            MeetingClient.broadcast(JSON.stringify(json));
+            msgIpt.value = "";
+            $('#mgs').append(msgs);
+            mgs.scrollTop = mgs.scrollHeight;
+            //保存输入会话内容到数据库
+            //提交记录请求
+            MeetingClient.sendMessage("record", {roomId: $('title').text(), sender:$('#userId').text(),msg: $('#userId').text() + ':' + msg, time: ntime});
+            /////////////
+            if ($('#msgRec').is(":visible"))
+            {
+                var m = ntime+'\n'+$('#userId').text() + ':' + msg+'\n';
+                msgRec.innerText=msgRec.innerText+m;
+            }
+        }
+    };
+
+    //获取聊天记录
+    recordBtn.onclick = function (event) {
+        msgRec.innerText = "";
+        if ($('#msgRec').is(":visible")) {
+
+        }
+        else {
+            MeetingClient.sendMessage("getRecord", {roomId: $('title').text()});
+        }
+        $('.history').toggle("clip", 400);
+    };
+
+
+    //删除聊天记录
+    cancelRecordBtn.onclick = function (event) {
+        $('.history').toggle("clip", 400);
+    };
+
+
+
+    var MeetingClient=meetingClient();
+    /*---获取在线用户---*/
+    var getOnlineUsers = function () {
+        $.ajax({
+            type: "POST",
+            url: '/getOnlineUsers',
+            data: {"roomId": 'Index'},
+            success: function (data) {
+                if (data.success) {
+                    for (var i = 0; i < data.users.length; i++) {
+                        var socketId = data.users[i].socketId;
+                        $('#leftSlide').append('<li id="' + data.users[i].socketId + '" name="' + data.users[i].userId + '" class="list-group-item leftSlideItem" >' + data.users[i].userId +
+                                '<a href="javascript:void(0)" class="btn icon-signin icon-large invitation" onclick="javascript:setInvitation(\'' + socketId + '\')"></a></li>');
+                    }
+                } else {
+                    alert("Sorry Error!!");
+                    $("#cancel1").click();
+                }
+            }
+        });
+    };
+    getOnlineUsers();
+
+
+
+    /*---邀请---*/
+    var setInvitation = function (socketId) {
+        var date = new Date();
+        var invitationTime = new Date(parseInt(date.getTime())).toLocaleString();
+        $.ajax({
+            type: "POST",
+            url: "/setInvitation",
+            data: {"roomId": $('title').text(), "senderId": $('#userId').text(),
+                "userId": $('#' + socketId).attr('name'), "invitationTime": invitationTime},
+            success: function (data) {
+                alert("邀请已发送");
+                MeetingClient.sendMessage('__getInvitations', {socketId: socketId});
+            }
+        });
+    }
+
+
+    MeetingClient.on("connected", function (socket) {
+        //创建本地视频流
+        MeetingClient.createStream({
+            "audio": true,
+            "video": true
+//            {
+//                mandatory: {
+//                    minWidth: 1280,
+//                    minHeight: 720
+//                }
+//            }
+        });
+        /**
+         * 文件传输部分 by hp
+         */
+            //视频加载成功后调用获取所有共享文件
+        MeetingClient.getAllSharedFile($('title').text());
+    });
+
+
+    //创建本地视频流成功
+    MeetingClient.on("stream_created", function (stream) {
+        document.getElementById('me').src = URL.createObjectURL(stream);//相当于这个video标签的src就是这个stream了
+        document.getElementById('me').play();
+        MeetingClient.attachStream(stream, 'localVedio');
+    });
+
+    MeetingClient.on('pc_add_stream', function (stream, socketId, userId) {
+        var remoteId = 'remote-' + socketId;
+        if ($("#" + remoteId).length > 0) {
+        }
+        else {
+            //////////
+            $('#remoteVedios').append("<div id='container-" + socketId + "' class = 'remoteContainer'>" +
+                    "<a onclick='javascript:removeVedio(\"" + socketId + "\");' id='remote-remove-" + socketId + "' hidden='true' class='btn btn-sm icon-large icon-minus-sign item removeButton' type='button'/>" +
+                    "<a onclick='javascript:remoteMuted(\"" + socketId + "\",this);' id='remote-muted-" + socketId + "' hidden='true' class='btn btn-sm icon-large icon-volume-up item remoteMuted' type='button'/>" +
+                    "<video onclick='javascript:clickVedio(this);' class='remoteVedio' id='remote-" + socketId + "' autoplay></video>" +
+                    "<div class='nameBanner'>" + userId + "</div></div>");
+            $('#container-' + socketId).hover(function () {
+                $('#remote-remove-' + socketId).show();
+                $('#remote-muted-' + socketId).show();
+            }, function () {
+                $('#remote-remove-' + socketId).hide();
+                $('#remote-muted-' + socketId).hide();
+            });
+        }
+        MeetingClient.attachStream(stream, remoteId);
+    });
+
+    MeetingClient.on("socket_closed", function () {
+        window.location.replace('https://' + window.location.host + '/NotFound');
+    });
+
+
+    /***************客户端监听文字聊天事件*****************/
+//接收到文字信息
+    MeetingClient.on('data_channel_message', function (channel, socketId, message) {
+        var p = document.createElement("p");
+        var json = JSON.parse(message);
+        p.innerHTML = json.msg;
+        var msgs = '<div style="font-weight: bold;margin-top: 5px">' + json.sender + '&nbsp;&nbsp;' + '<text style="font-weight:normal">' + json.time + '</text>' + '</div>' +
+                '<div class=\"popover bottom msg-record\" style=\"margin-left:10px;\">' +
+                '<div class=\"arrow\" style="left: 10%"></div> <div class=\"popover-content\"><p style="margin: 0px">' + p.innerHTML + '</p></div></div>';
+        $('#mgs').append(msgs);
+        mgs.scrollTop = mgs.scrollHeight;
+        if ($('#msgRec').is(":visible"))
+        {
+            var m = json.time+'\n'+json.sender+':'+json.msg+'\n';
+            msgRec.innerText=msgRec.innerText+m;
+        }
+    });
+
+
+    //接收到信息记录
+    MeetingClient.on('messageRecord', function (message) {
+        var p = document.createElement("p");
+        p.innerHTML =  message;
+        msgRec.appendChild(p);
+    });
+
+    MeetingClient.on('stop_progressbar', function () {
+        if(isChatfile===true)
+        {
+            $('#progressbar').attr('style', 'display: none');
+        }
+        else if(isChatfile===false)
+        {
+            $('#progressbar_pdf').attr('style', 'display: none');
+        }
+    })
+
+
+    //接收到共享文件
+    MeetingClient.on('new_Shared_File', function (data) {
+        //alert(isChatfile);
+        if(isChatfile===true)
+        {
+            $('#sharedFile').append("<li><a href='/getFile?path=" + data.filePath + "'>" + data.fileName + "</a></li>");
+        }
+        else if(isChatfile===false)
+        {
+            $('#sharedFile').append("<li><a href='/getFile?path=" + data.filePath + "'>" + data.fileName + "</a></li>");
+            var dataFileName = data.fileName;
+            if(dataFileName.split(".")[1]=="pdf")
+            {
+                var add = "<button class='btn btn-link filename' onclick='showpdfbyname("+"\""+data.fileName+"\""+")"+"'"+">"+data.fileName+"</button>";
+                file.push(add);
+                $('#filelist').append(add);
+                roomID = Request("roomId");
+                content = {data:file,roomId:roomID};
+                socket.emit("pdflist",content);
+            }
+            else{
+                dataFileName = dataFileName.split(".")[0]+".pdf";
+                var add = "<button class='btn btn-link filename' onclick='showpdfbyname("+"\""+dataFileName+"\""+")"+"'"+">"+dataFileName;
+                file.push(add);
+                $('#filelist').append(add);
+                roomID = Request("roomId");
+                content = {data:file,roomId:roomID};
+                socket.emit("pdflist",content);
+                ///不知道干嘛用
+//                var url = 'http://192.168.1.152:8080/test?path='+
+//                        'C:/Users/XL/Desktop/WebRTC/storeUpload/'+roomID+'/'+data.fileName;
+//                window.open(url);
+            }
+        }
+    });
+
+    //请求的所有共享文件
+    MeetingClient.on('all_shared_files', function (data) {
+        //console.log('data' + " " + data.length + " " + typeof(data));
+        for (var i = 0; i < data.length; i++) {
+            var tmp = JSON.parse(data[i]);
+            console.log('for里面' + data[i].fileName + "  " + tmp.fileName);
+            console.log(tmp.filePath);
+            $('#sharedFile').append("<li><a href='/getFile?path=" + tmp.filePath + "'>" + tmp.fileName + "</a></li>")
+        }
+    });
+
+    MeetingClient.on('someone_logoutroom', function (userId) {
+        alert(userId+"退出视频会议");
+        //将退出用户的视频窗口消除
+
+    });
+    MeetingClient.on('manager_logout', function () {
+       alert("会议结束");
+        //关闭页面
+        window.close();
+    });
+
+    MeetingClient.on('someone_login', function (data) {
+        if(data.userId===$("#userId").text()){
+            //还不懂
+            //window.location.replace("https://"+window.location.host+'/NotFound');
+        }
+        else{
+//                add(data);
+            getOnlineUsers();
+        }
+    });
+
+    MeetingClient.on("someone_logout", function (data) {
+        $('#'+data).remove();
+        $('#li'+data).remove();
+        $('#pane'+data).remove();
+    })
+
+
+    MeetingClient.connect("https://" + window.location.host, {roomId: $('title').text(), userId: $('#userId').text()});
+
+
+
+
+</script>
+</html>
