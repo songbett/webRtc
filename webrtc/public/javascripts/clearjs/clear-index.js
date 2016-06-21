@@ -95,7 +95,7 @@
     var num = 1; //聊天框数
     var idTemp;
     function create(id, uId) {
-        //id是socketId,uId是userId
+        //id是对方socketId,uId是userId
         $("#allChat1").click(function () {
             z++;
             $("#allChat1").css('z-index', z);

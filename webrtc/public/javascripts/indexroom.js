@@ -230,6 +230,7 @@ var indexClient= function () {
     };
     //好像没调用
     IndexClient.prototype.sendTextMessage= function (message,socketId) {
+        //socketid为对方的socketId
         //alert(this.dataChannels[socketId].readyState.toLowerCase());
         if(this.dataChannels[socketId].readyState.toLowerCase()==='open'){
             //alert(this.dataChannels[socketId]);

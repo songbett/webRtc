@@ -304,6 +304,7 @@
 </script>
 
 <script>
+    //添加聊天信息在聊天框内
     function getChat(id, text) {
         var data = JSON.parse(text);
         $('#chat' + id).append(
@@ -655,7 +656,10 @@
         });
 
         IndexClient.on('data_channel_message', function (channel,socketId,message) {
+            //这边是接收信息者监听的函数，socketId为发送者的socketId
+            console.log(socketId+message);
             if (document.getElementById('pane' + socketId) && document.getElementById('li' + socketId)) {
+                //如果已经存在聊天框，直接加入聊天记录
                 getChat(socketId, message);
                 if ($('#pane' + socketId).is(':visible') == false) {
                     lost_focus_msg_num[socketId] += 1;
@@ -666,6 +670,7 @@
                     $('li#li' + socketId + ' span').html("");
                     //同步到记录面板
                     if ($('#chatRecord' + socketId).is(':visible') == true) {
+                        //如果记录面板存在
                         getChatRecord(socketId, message);
                     }
                 }
