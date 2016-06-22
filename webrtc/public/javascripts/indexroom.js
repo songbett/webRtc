@@ -219,6 +219,12 @@ var indexClient= function () {
                 alert("sa");
                 that.peerConnections[that.vediosocketId].addStream(that.localMediaStream);
             }
+            //监听到close命令，窗口断掉
+            if(json.type==='__close'){
+                console.log(json.id);
+
+                $('#someVedio'+json.id).remove();
+            }
         };
 
         channel.onerror = function(err) {
@@ -228,7 +234,7 @@ var indexClient= function () {
         this.dataChannels[socketId]=channel;
         return channel;
     };
-    //好像没调用
+
     IndexClient.prototype.sendTextMessage= function (message,socketId) {
         //socketid为对方的socketId
         //alert(this.dataChannels[socketId].readyState.toLowerCase());
@@ -264,6 +270,7 @@ var indexClient= function () {
                 console.log(error);
             };
         pc = that.peerConnections[socketId];
+        console.log(pc);
         pc.createOffer(pcCreateOfferCbGen(pc, socketId), pcCreateOfferErrorCb);
     };
 
@@ -395,6 +402,7 @@ var indexClient= function () {
         });
     };
 
+    //添加本地视频流
     IndexClient.prototype.addStream = function(socketId,options,callback) {
         var that = this;
         if(that.localMediaStream)
@@ -429,8 +437,10 @@ var indexClient= function () {
     IndexClient.prototype.sendVedioInvitation = function(socketId,userId,callback)
     {
         //socketId是对方的socketId，userId是自己的用户名
+        console.log("对方"+socketId);
         var that = this;
         that.vediosocketId=socketId;
+        //添加本地视频流
         that.addStream(socketId, {
             "video": true,
             //{
@@ -447,13 +457,25 @@ var indexClient= function () {
     };
 
     IndexClient.prototype.acceptVedioInvitation = function(socketId,options,callback) {
+        //socketId是发送者的
         var that = this;
-        that.addStream(socketId,options,function(stream){
-            //alert(socketId);
+        //that.addStream(socketId,options,function(stream){
+        //    //alert(socketId);
+        //    that.sendOffer(socketId);
+        //    console.log(that.dataChannels[socketId]);
+        //    if(that.dataChannels[socketId].readyState==="open"){
+        //        that.dataChannels[socketId].send(JSON.stringify({
+        //            type:'vedio'
+        //        }));
+        //        callback(stream);
+        //    }else{
+        //        console.log("被邀请者的数据通道没有开启");
+        //    }
+        //});
+
+        that.vediosocketId=socketId;
+        that.addStream(socketId,options, function (stream) {
             that.sendOffer(socketId);
-            that.dataChannels[socketId].send(JSON.stringify({
-                type:'vedio'
-            }));
             callback(stream);
         });
     };
@@ -463,19 +485,29 @@ var indexClient= function () {
         var that = this;
         that.sendMessage('__vedioInvitationRefuse', {socketId: socketId, userId: userId});
     };
+
     //这个函数需要重新写，但好像有用
-    IndexClient.prototype.removeVedio = function(socketId) {
+    IndexClient.prototype.removeVedio = function(socketId,id) {
+        //socketId是自己的，id是别人的
         var that = this;
         var num = 0;
+        console.log(id);
+        console.log(that.dataChannels[id]);
         //that.peerConnections[socketId].removeStream(that.localMediaStream);
         delete that.initializedStreams[socketId];
-        that.sendOffer(socketId);
+       // that.sendOffer(socketId);
         for (var socketId in that.initializedStreams)
         {
             num +=that.initializedStreams[socketId];
         }
         that.localMediaStream.stop();
         that.localMediaStream=null;
+
+        //通知对方把视频窗口关掉
+        that.dataChannels[id].send(JSON.stringify({
+            type:"__close",
+            id: socketId
+        }));
         //if(num===0)
         //{
         //    //that.localMediaStream.stop();

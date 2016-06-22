@@ -259,32 +259,40 @@
 <script>
     /*关闭shipin*/
     function closeVedio(id) {
+        console.log("关闭对方视频");
         $("#vedio" + id).remove();
     }
 
     /*关闭shipin*/
-    function closeMyVedio(id) {
+    function closeMyVedio(id,socketId) {
+        //id为自己的socketId,socketId为对方的
+        console.log("关闭自己视频");
         $("#MMvedio" + id).remove();
         if(IndexClient.localMediaStream) {
-            IndexClient.removeVedio(id);
+            console.log("删除"+socketId);
+            IndexClient.removeVedio(id,socketId);
         }
     }
     /***视频***/
     function setVedioInvitation(id)
     {
         if(!document.getElementById("vedio"+id)) {
+            //添加别人的视频框
             $("#pane" + id).append("<div id='vedio" +id + "' style='height:200px;width:400px;position:absolute;margin-left:500px;'>"+
-                    "<button type='button' class='close' onclick='closeMyVedio(\"" + id + "\")'>" +
+                    "<button type='button' class='close' onclick='closeVedio(\"" + id + "\")'>" +
                     "<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>" +
-                    "<video id='myVedio" + id + "' class='remoteVedio' muted='true' style='width: 100%;min-height: 100%' autoplay></video></div>");
-
+                    "<video id='someVedio" + id + "' class='remoteVedio' muted='true' style='width: 100%;min-height: 100%' autoplay></video></div>");
+            //添加自己的视频框
             $("#pane" + id).append("<div id='MMvedio"+IndexClient.socket.id +"' style='height:200px;width:400px;position: absolute;margin-left:500px;margin-top:250px;'>" +
-                    "<button type='button' class='close' onclick='closeMyVedio(\"" + IndexClient.socket.id + "\")'>" +
+                    "<button type='button' class='close' onclick='closeMyVedio(\""+ IndexClient.socket.id + "\",\""+id+"\")'>" +
                     "<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>" +
                     "<video id='myVedio" + IndexClient.socket.id + "' class='remoteVedio' muted='true' style='width: 100%;min-height: 100%' autoplay></video></div>");
+
             IndexClient.sendVedioInvitation(id, $('#userId').text(), function (stream) {
+                //id为对方的socketId
                 //弹出stream窗口
                 //alert(id);
+                console.log("my vedio success");
                 IndexClient.attachStream(stream, 'myVedio' + IndexClient.socket.id);
             });
         }
@@ -538,6 +546,7 @@
 
         }
         //////联系人信息显示////////
+        //我的消息旁的数字
         function contactShow() {
             //用户待接收消息总数
             var message_num = 0;
@@ -550,6 +559,8 @@
             $('#messageNum').html('' + message_num);
         }
 
+
+        //我的消息下方的那一行
         function addContact(id) {
             var sender = $('li#' + id).attr('name');
             var num;
@@ -605,7 +616,7 @@
 //        };
 
         IndexClient.on('pc_add_stream', function (stream,socketId){
-            alert("1");
+            console.log("邀请者的someVedio");
             IndexClient.attachStream(stream,'someVedio'+socketId);
         });
 
@@ -615,6 +626,7 @@
             if(confirm("收到"+data.userId+"的视频邀请，是否接受"))
             {
                 if(!document.getElementById("vedio"+data.senderSocketId)){
+                    console.log("未有框");
                     IndexClient.acceptVedioInvitation(data.senderSocketId,{
                         "video": true,
 //                        {
@@ -625,18 +637,22 @@
 //                        },
                         "audio": true
                     },function(stream){
+                        //返回來的stream
+                        console.log("未有框的执行");
                         create(data.senderSocketId, data.userId);
                         $("#pane" + data.senderSocketId).append("<div id='vedio" + data.senderSocketId + "' style='height:200px;width:400px;position: absolute;margin-left:500px;'>" +
-                                "<button type='button' class='close' onclick='closeMyVedio(\"" +data.senderSocketId
+                                "<button type='button' class='close' onclick='closeVedio(\"" +data.senderSocketId
                                 + "\")'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>" +
                                 "<video id='someVedio" + data.senderSocketId + "' muted='true' class='remoteVedio' style='width: 100%;min-height: 100%' autoplay></video></div>");
                         $("#pane" + data.senderSocketId).append("<div id='MMvedio" +data.socketId+"'  style='height:200px;width:400px;position: absolute;margin-left:500px;margin-top:250px;'>" +
                                 "<button type='button' class='close' onclick='closeMyVedio(\"" + data.socketId
-                                + "\")'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>" +
+                                + "\",\""+data.senderSocketId+"\")'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>" +
                                 "<video id='myVedio" + data.socketId + "' muted='true' class='remoteVedio' style='width: 100%;min-height: 100%' autoplay></video></div>");
 
                         IndexClient.attachStream(stream, 'myVedio' + data.socketId);
                     });
+                }else{
+                    console.log("已有框");
                 }
             }
             else{
@@ -659,18 +675,20 @@
             //这边是接收信息者监听的函数，socketId为发送者的socketId
             console.log(socketId+message);
             if (document.getElementById('pane' + socketId) && document.getElementById('li' + socketId)) {
-                //如果已经存在聊天框，直接加入聊天记录
+                //如果已经存在聊天框，直接将信息加入聊天框中
                 getChat(socketId, message);
+                //如果当前窗口不是跟发送者的对话窗口，则在左侧列表名字旁加数字
                 if ($('#pane' + socketId).is(':visible') == false) {
                     lost_focus_msg_num[socketId] += 1;
                     $('li#li' + socketId + ' span').html("" + lost_focus_msg_num[socketId]);
                 }
+                //否则直接将内容显示
                 else {
                     lost_focus_msg_num[socketId] = 0;
                     $('li#li' + socketId + ' span').html("");
                     //同步到记录面板
                     if ($('#chatRecord' + socketId).is(':visible') == true) {
-                        //如果记录面板存在
+                        //更新聊天记录
                         getChatRecord(socketId, message);
                     }
                 }
@@ -679,6 +697,7 @@
                 off_line_msg_num[socketId] += 1;
                 off_line_msg[socketId].push(message);
                 $('li#' + socketId + ' span').html("" + off_line_msg_num[socketId]);
+                //我的消息提醒显示
                 addContact(socketId);
                 contactShow();
             }
