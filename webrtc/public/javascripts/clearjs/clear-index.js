@@ -218,7 +218,7 @@
                             $("#chatRecord" + id).remove();
                             IndexClient.sendMessage("__shutChat", {socketId: id});
                             if(IndexClient.localMediaStream) {
-                                IndexClient.removeVedio(id);
+                                IndexClient.removeVedio(IndexClient.socket.id,id);
                             }
                         }
                     );
@@ -234,7 +234,7 @@
                             $("#chatRecord" + id).remove();
                             IndexClient.sendMessage("__shutChat", {socketId: id});
                             if(IndexClient.localMediaStream) {
-                                IndexClient.removeVedio(id);
+                                IndexClient.removeVedio(IndexClient.socket.id,id);
                             }
                         }
                     );

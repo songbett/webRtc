@@ -276,11 +276,12 @@
     /***视频***/
     function setVedioInvitation(id)
     {
-        if(!document.getElementById("vedio"+id)) {
+        //如果没有对方的视频框和自己的视频框，则两个都加
+        if(!document.getElementById("vedio"+id)&&!document.getElementById("myVedio"+IndexClient.socket.id)) {
             //添加别人的视频框
             $("#pane" + id).append("<div id='vedio" +id + "' style='height:200px;width:400px;position:absolute;margin-left:500px;'>"+
                     "<button type='button' class='close' onclick='closeVedio(\"" + id + "\")'>" +
-                    "<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>" +
+                    "<span aria-hidden='true'>&times;</span><span class='sr-only'>ClIndexClient.socket.idose</span></button>" +
                     "<video id='someVedio" + id + "' class='remoteVedio' muted='true' style='width: 100%;min-height: 100%' autoplay></video></div>");
             //添加自己的视频框
             $("#pane" + id).append("<div id='MMvedio"+IndexClient.socket.id +"' style='height:200px;width:400px;position: absolute;margin-left:500px;margin-top:250px;'>" +
@@ -289,6 +290,29 @@
                     "<video id='myVedio" + IndexClient.socket.id + "' class='remoteVedio' muted='true' style='width: 100%;min-height: 100%' autoplay></video></div>");
 
             IndexClient.sendVedioInvitation(id, $('#userId').text(), function (stream) {
+                //id为对方的socketId
+                //弹出stream窗口
+                //alert(id);
+                console.log("my vedio success");
+                IndexClient.attachStream(stream, 'myVedio' + IndexClient.socket.id);
+            });
+        }
+        //如果没有对方的视频框但有自己的视频框
+        if(!document.getElementById("vedio"+id)&&document.getElementById("myVedio"+IndexClient.socket.id)){
+            //添加别人的视频框
+            $("#pane" + id).append("<div id='vedio" +id + "' style='height:200px;width:400px;position:absolute;margin-left:500px;'>"+
+                    "<button type='button' class='close' onclick='closeVedio(\"" + id + "\")'>" +
+                    "<span aria-hidden='true'>&times;</span><span class='sr-only'>ClIndexClient.socket.idose</span></button>" +
+                    "<video id='someVedio" + id + "' class='remoteVedio' muted='true' style='width: 100%;min-height: 100%' autoplay></video></div>");
+            IndexClient.sendVedioInvitation(id, $('#userId').text(), function (stream) {
+                //id为对方的socketId
+                //弹出stream窗口
+                //alert(id);
+                console.log("other vedio success");
+            });
+        }
+        if(document.getElementById("vedio"+id)&&!document.getElementById("myVedio"+IndexClient.socket.id)){
+            IndexClient.getMyVedio(id, $('#userId').text(), function (stream) {
                 //id为对方的socketId
                 //弹出stream窗口
                 //alert(id);
@@ -656,12 +680,19 @@
                 }
             }
             else{
-                IndexClient.refuseVedioInvitation(data.senderSocketId,$('#userId').text());
+                IndexClient.refuseVedioInvitation(data.senderSocketId,data.socketId,$('#userId').text());
             }
         });
 
         IndexClient.on('vedioInvitationRefuse',function(data){
+            console.log("拒绝");
+            console.log(data);
+            console.log(data.socketId);
             alert("视频邀请"+data.userId+"被拒绝");
+            //data.socketId为邀请者，data.Id为被邀请者
+            closeVedio(data.Id);
+            closeMyVedio(data.socketId,data.Id);
+
         });
 
         //被邀请者数据通道建立后的初始化

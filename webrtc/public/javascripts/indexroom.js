@@ -223,7 +223,7 @@ var indexClient= function () {
             if(json.type==='__close'){
                 console.log(json.id);
 
-                $('#someVedio'+json.id).remove();
+                $('#vedio'+json.id).remove();
             }
         };
 
@@ -398,6 +398,8 @@ var indexClient= function () {
         });
 
         this.on('_vedioInvitationRefuse',function(data){
+            console.log("hhh");
+            console.log(data);
             that.emit('vedioInvitationRefuse',data);
         });
     };
@@ -424,14 +426,17 @@ var indexClient= function () {
     };
 
     IndexClient.prototype.attachStream = function(stream, domId) {
+        console.log("贴视频流");
         var element = document.getElementById(domId);
         if (navigator.mozGetUserMedia) {
             element.mozSrcObject = stream;
             element.play();
         } else {
             element.src = webkitURL.createObjectURL(stream);
+            console.log("这里");
         }
         element.src = webkitURL.createObjectURL(stream);
+        console.log("那里");
     };
 
     IndexClient.prototype.sendVedioInvitation = function(socketId,userId,callback)
@@ -455,6 +460,22 @@ var indexClient= function () {
             callback(stream);
         });
     };
+
+    IndexClient.prototype.getMyVedio = function(socketId,userId,callback){
+        var that=this;
+        that.addStream(socketId, {
+            "video": true,
+            //{
+            //    mandatory: {
+            //        minWidth: 1280,
+            //        minHeight: 720
+            //    }
+            //},
+            "audio": true
+        }, function (stream) {
+            callback(stream);
+        });
+    }
 
     IndexClient.prototype.acceptVedioInvitation = function(socketId,options,callback) {
         //socketId是发送者的
@@ -480,10 +501,12 @@ var indexClient= function () {
         });
     };
 
-    IndexClient.prototype.refuseVedioInvitation = function(socketId,userId)
+    IndexClient.prototype.refuseVedioInvitation = function(socketId,Id,userId)
     {
+        console.log("拒绝傲晴"+Id);
+        //socketId为邀请者，Id为被邀请者，userId为邀请者的名字
         var that = this;
-        that.sendMessage('__vedioInvitationRefuse', {socketId: socketId, userId: userId});
+        that.sendMessage('__vedioInvitationRefuse', {socketId: socketId,Id: Id,userId: userId});
     };
 
     //这个函数需要重新写，但好像有用
@@ -494,6 +517,11 @@ var indexClient= function () {
         console.log(id);
         console.log(that.dataChannels[id]);
         //that.peerConnections[socketId].removeStream(that.localMediaStream);
+        //通知对方把视频窗口关掉
+        that.dataChannels[id].send(JSON.stringify({
+            type:"__close",
+            id: socketId
+        }));
         delete that.initializedStreams[socketId];
        // that.sendOffer(socketId);
         for (var socketId in that.initializedStreams)
@@ -503,11 +531,7 @@ var indexClient= function () {
         that.localMediaStream.stop();
         that.localMediaStream=null;
 
-        //通知对方把视频窗口关掉
-        that.dataChannels[id].send(JSON.stringify({
-            type:"__close",
-            id: socketId
-        }));
+
         //if(num===0)
         //{
         //    //that.localMediaStream.stop();

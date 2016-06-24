@@ -79,6 +79,9 @@ chatManager.prototype.onechatListen= function (RTCServer) {
     });
 
     RTCServer.on('__vedioInvitationRefuse',function(data,socket){
+        //data.socketId为邀请者，data.Id为委邀请者
+        console.log("拒绝");
+        console.log(data);
         var that = this;
         //console.log('__vedioInvitationRefuse  '+data.socketId);
         var soc = that.roomSockets[data.socketId];
@@ -87,7 +90,8 @@ chatManager.prototype.onechatListen= function (RTCServer) {
                 "eventName": "_vedioInvitationRefuse",
                 "data": {
                     "userId":data.userId,
-                    "socketId":data.socketId}
+                    "socketId":data.socketId},
+                    "Id":data.Id
             }), errorCb);
         }
     });

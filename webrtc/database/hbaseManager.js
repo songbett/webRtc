@@ -6,7 +6,7 @@
  //var hbase_host = '116.56.129.233';
  //var hbase_host="110.64.90.191";
   //var hbase_host = '121.42.157.14';
-   var hbase_host = '192.168.3.216';
+   var hbase_host = '192.168.3.27';
   //var hbase_host = '121.42.157.14';
   var hbase_client = hbase({
  	host:hbase_host,

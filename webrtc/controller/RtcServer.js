@@ -55,6 +55,14 @@ RtcServer.prototype.init= function (socket) {
     socket.on('message', function (data) {
         var json=JSON.parse(data);
         console.log(data);
+        if(json.eventName=="__vedioInvitationRefuse"){
+            console.log("ye的");
+            console.log(json.data);
+        }
+        if(json.eventName=="_vedioInvitationRefuse"){
+            console.log("妈的");
+            console.log(json.data);
+        }
         that.emit(json.eventName,json.data,socket);
     });
 
