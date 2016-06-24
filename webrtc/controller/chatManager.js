@@ -85,13 +85,15 @@ chatManager.prototype.onechatListen= function (RTCServer) {
         var that = this;
         //console.log('__vedioInvitationRefuse  '+data.socketId);
         var soc = that.roomSockets[data.socketId];
+        console.log("拒绝socket");
+        console.log(soc);
         if (soc) {
             soc.send(JSON.stringify({
                 "eventName": "_vedioInvitationRefuse",
                 "data": {
                     "userId":data.userId,
-                    "socketId":data.socketId},
-                    "Id":data.Id
+                    "socketId":data.socketId,
+                    "Id":data.Id}
             }), errorCb);
         }
     });

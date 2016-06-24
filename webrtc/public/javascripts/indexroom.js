@@ -394,6 +394,8 @@ var indexClient= function () {
         });
 
         this.on('_vedioInvitation',function(data){
+            console.log("邀请过程");
+            console.log(data);
             that.emit('vedioInvitation',data);
         });
 
