@@ -1,0 +1,178 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    overflow: scroll !important;
+}
+#container{
+    width: 960px;
+    margin: 0 auto;
+    padding-top: 40px;
+}
+.header{
+    overflow: hidden;
+    margin-bottom: 20px;
+    z-index: 0;
+    position: relative;
+    left: auto;
+    top: auto;
+}
+.header h1{
+    color: #ff7e00;
+    font-size: 28px;
+    float: left;
+    margin-top: 25px;
+}
+.header .person_img{
+    float: right;
+}
+.header .person_img img{
+    width: 100%;
+    border-radius: 50%;
+}
+.content{
+    background: #fff;
+    padding: 10px 34px 34px 34px;
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+.content li{
+    list-style: none;
+    padding: 30px 0px;
+    border-bottom: 1px solid #f2f2f2;
+}
+.content li .li_content{
+    height: 42px;
+}
+.li_content em{
+    background: url("/images/device-icos.png") no-repeat 0 0;
+    left: 0;
+    top: 0;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+}
+.li_content_left{
+    position: relative;
+    overflow: hidden;
+    width: 600px;
+    float: left;
+    padding-left: 52px;
+}
+.li_content_left .p1{
+    font-size: 16px;
+    color: rgba(85, 85, 85, 0.88);
+    font-weight: 500;
+}
+.li_content_left .p2{
+    color: rgba(255, 102, 0, 0.72) !important;
+    font-size: 12px;
+}
+.li_content_right{
+    float: right;
+}
+.li_content_right span a{
+    display: block;
+    width: 103px;
+    border: 1px solid #e8e8e8;
+    text-align: center;
+    height: 33px;
+    line-height: 33px;
+    color: #555;
+    cursor: pointer;
+}
+.li_content_right span a:hover{
+    background-color: #e3e3e3;
+}
+/*pop-box样式*/
+.pop-box{
+    position: absolute;
+    z-index: 4;
+    left: 50%;
+    top: 50%;
+    margin-left: -206px;
+    margin-top: -187px;
+    width: 412px;
+    height: auto;
+    min-height: 300px;
+    padding: 0 14px 30px;
+    border:1px solid #d1d1d1;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #666;
+}
+.box-header{
+    position: relative;
+    padding-top: 13px;
+    line-height: 42px;
+    border-bottom: 1px solid #e6e6e6;
+}
+.box-header p{
+    font-size: 15px;
+}
+.close-popbox{
+    float: right;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 18px;
+    color: #666;
+}
+.box-content{
+    padding: 30px 60px 0;
+}
+.box-content-middle input{
+    width: 254px;
+    border: 1px solid #e8e8e8;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding-left: 8px;
+}
+.box-content-middle select{
+    height: 42px;
+    border: 1px solid #e8e8e8;
+    width: 254px;
+}
+.box-content-button{
+    text-align: center;
+}
+.box-content-button span{
+    min-width: 100px;
+    height: 33px;
+    margin: 0 2px;
+    padding: 0 10px;
+    line-height: 33px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.box-content-button .ensure{
+    background: #ff6700;
+    border: 1px solid #ff6700;
+    color: #fff;
+}
+.box-content-button .cancel{
+    border: 1px solid #e8e8e8;
+    color: #555;
+}
+.question-wrap{
+    margin-bottom: 10px;
+}
+.close-popbox{
+    cursor:pointer;
+}
+
+/*蒙版样式*/
+#mask{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: #333;
+    filter: alpha(opacity=70);
+    opacity: 0.7;
+}

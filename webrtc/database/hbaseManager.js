@@ -1,20 +1,21 @@
 /**
  * Created by Fa on 15-10-20.
  */
- var hbase = require('hbase');
- var hbase_port = 8090;
- //var hbase_host = '116.56.129.233';
- //var hbase_host="110.64.90.191";
-  //var hbase_host = '121.42.157.14';
-   var hbase_host = '192.168.3.216';
-  //var hbase_host = '121.42.157.14';
-  var hbase_client = hbase({
+var hbase = require('hbase');
+
+var conf = require("../config.json");
+var hbase_port = conf.hbase_port;
+console.log('Port: '+conf.hbase_port);
+//var hbase_port = 8090;
+var hbase_host = conf.hbase_host;
+console.log('Host: '+conf.hbase_host);
+//var hbase_host = "192.168.3.156";
+var hbase_client = hbase({
  	host:hbase_host,
  	port:hbase_port
  });
- var fs = require('fs');
- var redis = require('redis');
-var conf = require("../config.js");
+var fs = require('fs');
+var redis = require('redis');
 var redisPort = conf.redisPort;
 var redisHost = conf.redisHost;
 
@@ -25,9 +26,11 @@ var redisHost = conf.redisHost;
  }
 
  hbaseManager.prototype.saveUser = function(userId,userPassword,userEmail,callback) {
+     var registTime = (new Date()).Format("yyyy-MM-dd");
  	var table = hbase_client.getTable("User");
+     var Image="head.jpg";
  	table.create('InfoCF',function(err,success){
- 		this.getRow(userId).put(['InfoCF:Password','InfoCF:Email'], [userPassword,userEmail],function(err,success){
+ 		this.getRow(userId).put(['InfoCF:Password','InfoCF:Email','InfoCF:RegistTime','InfoCF:Head'], [userPassword,userEmail,registTime,Image],function(err,success){
  			console.log('insert one colunm');
  			console.log(success);
  			callback(success);   //若数据成功储存，success为true,否则为false
@@ -64,14 +67,15 @@ hbaseManager.prototype.saveOneChatRecord = function(record){
         recordId:record.recordId,
         sender:record.sender,
         message:record.message,
-        time:record.time
+        time:record.time,
+        head:record.head
     };
-    console.log(oneChatRecord);
+    //console.log(oneChatRecord);
 
     var table = hbase_client.getTable("One_Chat_Record");
     table.create('cf',function(err,success){
         this.getRow(oneChatRecord.recordId)
-            .put(['cf:sender','cf:message','cf:time'],[oneChatRecord.sender,oneChatRecord.message,oneChatRecord.time],function(err,success){
+            .put(['cf:sender','cf:message','cf:time','cf:head'],[oneChatRecord.sender,oneChatRecord.message,oneChatRecord.time,oneChatRecord.head],function(err,success){
                 console.log('insert one colunm');
                 console.log(success);
             });
@@ -87,11 +91,12 @@ hbaseManager.prototype.getOneChatRecord = function(SRId,callback){
         function (err, success) {
             this.get(function (err, cells) {
                 if(cells) {
-                    for (var i = 0; i < cells.length; i += 3) {
+                    for (var i = 0; i < cells.length; i += 4) {
                         var record = {
                             msg: cells[i].$,
                             sender: cells[i + 1].$,
-                            time: cells[i + 2].$
+                            time: cells[i + 2].$,
+                            head:cells[i + 3].$
                         };
                         records.push(JSON.stringify(record));
                     }
@@ -168,7 +173,7 @@ hbaseManager.prototype.getOneChatFile = function(sender,receiver,callback){
 //////////
 hbaseManager.prototype.setInvitationTo = function (invitation, callback) {
     var table = hbase_client.getTable("Invitation_Store");
-    console.log("邀请来了3");
+    //console.log("邀请来了3");
     table.create('InvitationCF', function (err, success) {
         this.getRow(invitation.invitationId)
             .put(['InvitationCF:RoomId', 'InvitationCF:SenderId', 'InvitationCF:UserId', 'InvitationCF:InvitationTime', 'InvitationCF:InvitationOver','InvitationCF:InvitationAccept'],
@@ -177,9 +182,9 @@ hbaseManager.prototype.setInvitationTo = function (invitation, callback) {
 
                 callback(err1,success1);
             });
-        console.log("邀请来了4");
+        //console.log("邀请来了4");
     });
-    console.log("邀请来了8")
+    //console.log("邀请来了8")
 };
 
 
@@ -217,7 +222,7 @@ hbaseManager.prototype.setInvitationAccepted = function (userId, roomId) {
 hbaseManager.prototype.getInvitationsFrom = function (userId, callback)
 {
     var scanner = hbase_client.getScanner('Invitation_Store');
-    scanner.create({filter: {op: "EQUAL", type: "RowFilter", comparator: {value: userId, "type": "RegexStringComparator"}}},
+    scanner.create({filter: {op: "EQUAL", type: "RowFilter", comparator: {value: userId + "-Room", "type": "RegexStringComparator"}}},
         function (err, success) {
             this.get(function (err, cells) {
                 //console.log(cells);
@@ -225,22 +230,60 @@ hbaseManager.prototype.getInvitationsFrom = function (userId, callback)
                 var values = [];
                 if (cells) {
                     for (var i = 0; i < cells.length / 6; i++) {
-                        var invitation = {
-                            invitationId: cells[6 * i].key,
-                            invitationAccept: cells[6 * i].$,
-                            invitationOver: cells[6 * i+1].$,
-                            invitationTime: cells[6 * i + 2].$,
-                            roomId: cells[6 * i + 3].$,
-                            senderId: cells[6 * i + 4].$,
-                            userId: cells[6 * i + 5].$
-                        };
-                        values.push(invitation);
+                        if(cells[6*i+1].$ == "0") {
+                            var invitation = {
+                                invitationId: cells[6 * i].key,
+                                invitationAccept: cells[6 * i].$,
+                                invitationOver: cells[6 * i + 1].$,
+                                invitationTime: cells[6 * i + 2].$,
+                                roomId: cells[6 * i + 3].$,
+                                senderId: cells[6 * i + 4].$,
+                                userId: cells[6 * i + 5].$
+                            };
+                            //a!=b vs. !(a==b)
+                            values.push(invitation);
+                        }
                     }
                 }
                 callback(err, values);
             });
         });
 };
+
+
+hbaseManager.prototype.setInvitationOver = function (roomId) {
+    var scanner = hbase_client.getScanner('Invitation_Store');
+
+    scanner.create({filter: {op: "EQUAL", type: "RowFilter", comparator: {value: roomId, "type": "RegexStringComparator"}}},
+        function (err, success) {
+            this.get(function (err, cells) {
+                console.log(cells);
+                this.delete();
+                if (cells) {
+                    var table = hbase_client.getTable('Invitation_Store');
+                    table.create('InvitationCF', function (err, success) {
+                        for(var i = 0; i < cells.length / 6; i++) {
+                            //console.log('cells i = '+i);
+                            (function(i){
+                                //console.log('middle + '+i+'  '+cells[6 * i].key);
+                                table.getRow(cells[6 * i].key)
+                                    .put('InvitationCF:InvitationOver', '1', function (err, success) {
+                                        console.log('set Invitation to Over');
+                                        console.log(success);
+                                    });
+                            })(i);
+                            //console.log("after i "+i);
+                        }
+                    });
+                }
+            });
+        });
+};
+
+
+
+
+
 
 ///////
 hbaseManager.prototype.save = function (record) {
@@ -249,7 +292,7 @@ hbaseManager.prototype.save = function (record) {
         message: record.message,
         time:record.time
     };
-    console.log(sessionRecord);
+    //console.log(sessionRecord);
     var table = hbase_client.getTable("mytable");
     table.create('cf', function (err, success) {
         this.getRow(sessionRecord.recordId)
@@ -274,7 +317,7 @@ hbaseManager.prototype.getMessages = function getMessages(roomId,callback) {
             "comparator": {"value": roomId, "type": "RegexStringComparator"}}},
         function (err, success) {
             this.get(function (err, cells) {
-                console.log(cells);
+                //console.log(cells);
                 if(cells) {
                     for (var i = 0; i < cells.length; i += 2) {
                         //不能读取.$
@@ -286,7 +329,7 @@ hbaseManager.prototype.getMessages = function getMessages(roomId,callback) {
                     for (var i = 0; i < l; i++) {
                         msgs += mgs[i] + '\n';
                     }
-                    console.log(msgs);
+                   // console.log(msgs);
                     callback(msgs);
                 }
             });
@@ -389,7 +432,88 @@ hbaseManager.prototype.getRoomHost = function (roomId, callback) {
     });
 };
 
+/**
+ * Function getAllUsers accepts a callback function
+ * to deal with the data fetched from User table
+ * @param callback
+ * Users: array stored the user data in json format,
+ *        like [string0, string1, ... , stringN]
+ */
+hbaseManager.prototype.getAllUsers = function(callback){
 
+    var scanner = hbase_client.getScanner('User');
+    var Users = [];
+    scanner.create({filter: {"op": "EQUAL", "type": "RowFilter",
+            "comparator": {"value": "", "type": "RegexStringComparator"}}},
+        function (err, success) {
+            this.get(function (err, cells) {
+                if(err) {
+                    return callback(Users);
+                }
+                if(cells) {
+                    for (var i = 0; i < cells.length; i += 3) {
+                        Users.push(JSON.stringify({
+                            userId: cells[i].key,
+                            email: cells[i].$,
+                            date: cells[i + 2].$
+                        }));
+                    }
+                }
+                return callback(Users);
+            });
+        });
+};
+
+
+hbaseManager.prototype.delUser = function(userId,callback){
+    var table = hbase_client.getTable("User");
+    var user = table.getRow(userId);
+    user.delete(function(err,success){
+        if(success){
+            callback(true);
+        }
+        else
+            callback(false);
+    });
+};
+
+hbaseManager.prototype.changeImage = function(userId,imagePath){
+    var scanner = hbase_client.getScanner('User');
+    scanner.create({filter: {op: "EQUAL", type: "RowFilter", comparator: {value: userId, "type": "RegexStringComparator"}}},
+        function (err, success) {
+            this.get(function (err, cells) {
+                console.log(cells);
+                this.delete();
+                if (cells) {
+                    var table = hbase_client.getTable('User');
+                    table.create('InfoCF', function (err, success) {
+                        for(var i = 0; i < cells.length / 4; i++) {
+                            (function(i){
+                                table.getRow(cells[4 * i].key)
+                                    .put('InfoCF:Head',imagePath, function (err, success) {
+                                        console.log("Image changed!");
+                                    });
+                            })(i);
+                        }
+                    });
+                }
+            });
+        });
+};
+
+hbaseManager.prototype.getUserImage = function(userId,callback){
+    var table = hbase_client.getTable("User");
+    table.getRow(userId).exists(function(err,exist){
+        if(exist){
+            this.get('InfoCF:Head',function(err,value){
+                callback(err,value[0].$);
+            });
+        }
+        else{
+            callback(err, null);
+        }
+    });
+};
 
 
 

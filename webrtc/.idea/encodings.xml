@@ -4,8 +4,10 @@
     <file url="file://$PROJECT_DIR$/controller/InvitationManager.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/controller/RtcServer.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/controller/UserManager.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/controller/chatManager.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/database/redisManager.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/public/javascripts/indexroom.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/public/javascripts/meetingroom.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/public/javascripts/myjs/personSetting.js" charset="UTF-8" />
   </component>
 </project>

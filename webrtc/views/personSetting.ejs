@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<% include header.ejs %>
+<link rel="stylesheet" href="/stylesheets/css/personSetting.css">
+<script src="/javascripts/myjs/personSetting.js"></script>
+    <div id="container">
+        <div class="header">
+            <h1>账号信息</h1>
+            <div class="person_img">
+                <div style="float: left;"><span class="userId" style="position: relative;top: 30px;right: 10px;font-size: 16px;"><%=userId%></span></div>
+                <div style="float: right;width: 100px"><img src="/images/1.jpg" /></div>
+            </div>
+        </div>
+        <div class="content">
+            <ul>
+                <li>
+                    <div class="li_content">
+                        <div class="li_content_left">
+                            <em style=" background-position: -160px 0"></em>
+                            <p class="p1">用户名</p>
+                            <p class="p2">用户登录系统的账号</p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="li_content">
+                        <div class="li_content_left">
+                            <em style=" background-position: 0px 0;"></em>
+                            <p class="p1">密码</p>
+                            <p class="p2">用于登录安全</p>
+                        </div>
+                        <div class="li_content_right">
+                            <span class="password-change"><a href="javascript:void(0);" >修改</a></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="li_content">
+                        <div class="li_content_left">
+                            <em style="background-position: -40px 0;"></em>
+                            <p class="p1">邮箱</p>
+                            <p class="p2">用于系统信息推送</p>
+                        </div>
+                        <div class="li_content_right">
+                            <span class="email-change"><a href="javascript:void(0);" >修改</a></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="li_content">
+                        <div class="li_content_left">
+                            <em style="background-position: -80px 0"></em>
+                            <p class="p1">密保问题</p>
+                            <p class="p2">密保问题用于安全验证</p>
+                        </div>
+                        <div class="li_content_right">
+                            <span class="question-change"><a href="javascript:void(0);" >设置</a></span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pop-box" style="display: none">
+        <div class="box-header">
+            <p>修改密码</p>
+            <div class="close-popbox">x</div>
+        </div>
+        <div class="box-content">
+            <div class="box-content-middle">
+                <dl>
+                    <dt>原密码</dt>
+                    <dd>
+                        <input type="password" class="origin-password" placeholder="输入原密码"/>
+                    </dd>
+                    <p class="password-error-tips" style="display: none"><img src="/images/error.png"/><span style="color:#ff6700;position: relative;top: 2px;"></span></p>
+                </dl>
+                <dl>
+                    <dt>新密码</dt>
+                    <dd>
+                        <input type="password" class="new-password" placeholder="输入新密码"/>
+                    </dd>
+                    <dd>
+                        <input type="password" class="new-password-again" placeholder="重复新密码"/>
+                    </dd>
+                    <p class="password-again-error-tips" style="display: none"><img src="/images/error.png"/><span style="color:#ff6700;position: relative;top: 2px;"> 两次密码不一致</span></p>
+                </dl>
+            </div>
+            <div class="box-content-button">
+                <span class="ensure">确定</span>
+                <span class="cancel">取消</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="pop-box" style="display: none">
+        <div class="box-header">
+            <p>修改邮箱</p>
+            <div class="close-popbox">x</div>
+        </div>
+        <div class="box-content">
+            <div class="box-content-middle">
+                <dl>
+                    <dt>新邮箱</dt>
+                    <dd>
+                        <input class="new-email" type="email" placeholder="输入新邮箱"/>
+                    </dd>
+                    <p class="email-error-tips" style="display: none"><img src="/images/error.png"/><span style="color:#ff6700;position: relative;top: 2px;"> 邮箱格式不正确</span></p>
+                </dl>
+            </div>
+            <div class="box-content-button">
+                <span class="ensure">确定</span>
+                <span class="cancel">取消</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="pop-box" style="display: none">
+        <div class="box-header">
+            <p>设置密保问题</p>
+            <div class="close-popbox">x</div>
+        </div>
+        <div class="box-content">
+            <div class="box-content-middle">
+                <dl>
+                    <dt>请牢记您的密保问题</dt>
+                        <div class="question-wrap">
+                            <dd>
+                                <select class="select1">
+                                    <option>请选择您的密保问题</option>
+                                    <optgroup label="家属信息">
+                                        <option>您父亲的姓名</option>
+                                        <option>您母亲的姓名</option>
+                                    </optgroup>
+                                    <optgroup label="学校信息">
+                                        <option>您高中的班主任的名字</option>
+                                        <option>您大学的名称</option>
+                                        <option>您印象最深的舍友的名字</option>
+                                    </optgroup>
+                                    <optgroup label="各种第一次">
+                                        <option>您第一个宠物的名字</option>
+                                        <option>您第一人男朋友/女朋友姓名</option>
+                                    </optgroup>
+                                </select>
+                            </dd>
+                            <dd>
+                                <input class="question1" type="text"/>
+                            </dd>
+                        </div>
+                    <div class="question-wrap">
+                        <dd>
+                            <select class="select2">
+                                <option>请选择您的密保问题</option>
+                                <optgroup label="家属信息">
+                                    <option>您父亲的姓名</option>
+                                    <option>您母亲的姓名</option>
+                                </optgroup>
+                                <optgroup label="学校信息">
+                                    <option>您高中的班主任的名字</option>
+                                    <option>您大学的名称</option>
+                                    <option>您印象最深的舍友的名字</option>
+                                </optgroup>
+                                <optgroup label="各种第一次">
+                                    <option>您第一个宠物的名字</option>
+                                    <option>您第一人男朋友/女朋友姓名</option>
+                                </optgroup>
+                            </select>
+                        </dd>
+                        <dd>
+                            <input class="question2" type="text"/>
+                        </dd>
+                    </div>
+                    <div class="question-wrap">
+                        <dd>
+                            <select class="selec3">
+                                <option>请选择您的密保问题</option>
+                                <optgroup label="家属信息">
+                                    <option>您父亲的姓名</option>
+                                    <option>您母亲的姓名</option>
+                                </optgroup>
+                                <optgroup label="学校信息">
+                                    <option>您高中的班主任的名字</option>
+                                    <option>您大学的名称</option>
+                                    <option>您印象最深的舍友的名字</option>
+                                </optgroup>
+                                <optgroup label="各种第一次">
+                                    <option>您第一个宠物的名字</option>
+                                    <option>您第一人男朋友/女朋友姓名</option>
+                                </optgroup>
+                            </select>
+                        </dd>
+                        <dd>
+                            <input class="question3" type="text"/>
+                        </dd>
+                    </div>
+                    <p class="question-error-tips" style="display: none"><img src="/images/error.png"/><span style="color:#ff6700;position: relative;top: 2px;"> 答案不能为空</span></p>
+                </dl>
+            </div>
+            <div class="box-content-button">
+                <span class="ensure">确定</span>
+                <span class="cancel">取消</span>
+            </div>
+        </div>
+    </div>
+
+    <!--蒙版-->
+    <div id="mask" style="display: none">
+
+    </div>
+
+    <script>
+        $(function () {
+            $("#joinroomeffect").hide();
+            $("#pop").hide();
+
+            $("#logina").remove();
+            $("#regista").remove();
+            $("#user").children().append("<p><%=userId%></p>");
+        });
+    </script>
+</html>

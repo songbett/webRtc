@@ -1,0 +1,7 @@
+{
+  "redisPort": "6379",
+  "redisHost": "127.0.0.1",
+  "hbase_port": "8090",
+  "hbase_host": "121.42.157.14",
+  "rsapp": "myapp"
+}

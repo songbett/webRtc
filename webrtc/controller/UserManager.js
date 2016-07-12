@@ -207,6 +207,55 @@ UserManager.prototype.getallusers= function (req,res) {
 
 };
 
+UserManager.prototype.changePassword=function (req,res){
+    var originPassword=req.body.originPassword;
+    var newPassword=req.body.newPassword;
+    var userId=req.body.userId;
+    console.log("旧密码");
+    console.log(originPassword);
+
+    hbaseManager.getUser(userId, function (err, user) {
+        if (user) {
+            if (user.userPassword === req.originPassword) {
+                hbaseManager.changeUserPassword(userId,newPassword, function (data) {
+
+                });
+            }
+        }
+    });
+
+}
+
+UserManager.prototype.changeEmail=function(req,res){
+    var newEmail=req.body.newEmail;
+}
+
+UserManager.prototype.changeQuestion=function(req,res){
+    var select1=req.body.select1;
+    var select2=req.body.select2;
+    var select3=req.body.select3;
+    var question1=req.body.question1;
+    var question2=req.body.question2;
+    var question3=req.body.question3;
+
+    var replys={
+        reply1 : {
+            question1 : select1,
+            answer1 : question1
+        },
+        reply2 : {
+            question2 : select2,
+            answer2 : question2
+        },
+        reply3 : {
+            question3 : select3,
+            answer3 : question3
+        }
+    };
+    var replysJson=JSON.stringify(replys);
+    console.log(replysJson);
+}
+
 
 
 exports.getUserManager= function () {

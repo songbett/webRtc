@@ -1,5 +1,5 @@
 /*
- �������� __setInviteChat
+ ???????? __setInviteChat
  */
 var querystring=require("qs");
 var redisManager=require('../database/redisManager.js').getRedisManager();
@@ -52,7 +52,7 @@ chatManager.prototype.onechatListen= function (RTCServer) {
         that.ChatManager.saverecord(record);
     });
 
-    //�����ͻ���ȡ��Ϣ��¼�¼�
+    //???????????????????
     RTCServer.on('get_oneRecord', function(data, socket){
         var that=this;
         var json = querystring.parse(data);
@@ -98,7 +98,7 @@ chatManager.prototype.onechatListen= function (RTCServer) {
         }
     });
 
-    //�����ͻ���Ϣ��¼�¼�
+    //????????????????
     RTCServer.on('record', function(data, socket){
         console.log("record");
         var json = querystring.parse(data);
@@ -107,7 +107,7 @@ chatManager.prototype.onechatListen= function (RTCServer) {
         RTCServer.ChatManager.save(record);
     });
 
-    //�����ͻ���ȡ��Ϣ��¼�¼�
+    //???????????????????
     RTCServer.on('getRecord', function(data, socket){
         var json = querystring.parse(data);
         RTCServer.ChatManager.getMeetingMessages(json.roomId,function(messages)

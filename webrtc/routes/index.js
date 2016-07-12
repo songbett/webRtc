@@ -15,6 +15,13 @@ module.exports.index= function (app) {
         res.render('index',{userId:req.session.user.userId});
    });
 
+    app.get('/personSetting', function (req,res) {
+       res.render('personSetting',{userId:req.session.user.userId});
+    });
+    app.post('/personSetting-changePassword',userManager.changePassword);
+    app.post('/personSetting-changeEmail',userManager.changeEmail);
+    app.post('/personSetting-changeQuestion',userManager.changeQuestion);
+
     app.get('/login', function (req,res) {
       res.render('login',{'msg':''});
     });
