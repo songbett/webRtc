@@ -22,6 +22,13 @@ module.exports.index= function (app) {
     app.post('/personSetting-changeEmail',userManager.changeEmail);
     app.post('/personSetting-changeQuestion',userManager.changeQuestion);
 
+    app.get('/forgetPassword',function(req,res){
+        res.render('forgetPassword');
+    })
+    app.post('/getQuestions',userManager.getQuestions);
+    app.post('/resetPassword',userManager.resetPassword);
+
+
     app.get('/login', function (req,res) {
       res.render('login',{'msg':''});
     });

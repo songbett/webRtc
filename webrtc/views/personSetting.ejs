@@ -75,7 +75,7 @@
                     <dd>
                         <input type="password" class="origin-password" placeholder="输入原密码"/>
                     </dd>
-                    <p class="password-error-tips" style="display: none"><img src="/images/error.png"/><span style="color:#ff6700;position: relative;top: 2px;"></span></p>
+                    <p class="password-error-tips" style="display: none"><img src="/images/error.png"/><span style="color:#ff6700;position: relative;top: 2px;margin-left: 4px;"></span></p>
                 </dl>
                 <dl>
                     <dt>新密码</dt>
@@ -85,7 +85,7 @@
                     <dd>
                         <input type="password" class="new-password-again" placeholder="重复新密码"/>
                     </dd>
-                    <p class="password-again-error-tips" style="display: none"><img src="/images/error.png"/><span style="color:#ff6700;position: relative;top: 2px;"> 两次密码不一致</span></p>
+                    <p class="password-again-error-tips" style="display: none"><img src="/images/error.png"/><span style="color:#ff6700;position: relative;top: 2px;margin-left: 4px;"> 两次密码不一致</span></p>
                 </dl>
             </div>
             <div class="box-content-button">
@@ -107,7 +107,7 @@
                     <dd>
                         <input class="new-email" type="email" placeholder="输入新邮箱"/>
                     </dd>
-                    <p class="email-error-tips" style="display: none"><img src="/images/error.png"/><span style="color:#ff6700;position: relative;top: 2px;"> 邮箱格式不正确</span></p>
+                    <p class="email-error-tips" style="display: none"><img src="/images/error.png"/><span style="color:#ff6700;position: relative;top: 2px;margin-left: 4px;"> 邮箱格式不正确</span></p>
                 </dl>
             </div>
             <div class="box-content-button">
@@ -164,7 +164,7 @@
                                 </optgroup>
                                 <optgroup label="各种第一次">
                                     <option>您第一个宠物的名字</option>
-                                    <option>您第一人男朋友/女朋友姓名</option>
+                                    <option>您第一任男朋友/女朋友姓名</option>
                                 </optgroup>
                             </select>
                         </dd>
@@ -174,7 +174,7 @@
                     </div>
                     <div class="question-wrap">
                         <dd>
-                            <select class="selec3">
+                            <select class="select3">
                                 <option>请选择您的密保问题</option>
                                 <optgroup label="家属信息">
                                     <option>您父亲的姓名</option>
@@ -187,7 +187,7 @@
                                 </optgroup>
                                 <optgroup label="各种第一次">
                                     <option>您第一个宠物的名字</option>
-                                    <option>您第一人男朋友/女朋友姓名</option>
+                                    <option>您第一任男朋友/女朋友姓名</option>
                                 </optgroup>
                             </select>
                         </dd>
@@ -195,7 +195,7 @@
                             <input class="question3" type="text"/>
                         </dd>
                     </div>
-                    <p class="question-error-tips" style="display: none"><img src="/images/error.png"/><span style="color:#ff6700;position: relative;top: 2px;"> 答案不能为空</span></p>
+                    <p class="question-error-tips" style="display: none"><img src="/images/error.png"/><span style="color:#ff6700;position: relative;top: 2px;margin-left: 4px;"> 答案不能为空</span></p>
                 </dl>
             </div>
             <div class="box-content-button">
@@ -204,6 +204,13 @@
             </div>
         </div>
     </div>
+
+    <!--修改成功弹窗-->
+    <div id="success-box" style="display: none">
+        <div class="success-close">x</div>
+        <div class="success-info"><span>修改成功</span></div>
+    </div>
+
 
     <!--蒙版-->
     <div id="mask" style="display: none">

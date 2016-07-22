@@ -216,10 +216,17 @@ UserManager.prototype.changePassword=function (req,res){
 
     hbaseManager.getUser(userId, function (err, user) {
         if (user) {
-            if (user.userPassword === req.originPassword) {
+            if (user.userPassword === originPassword) {
                 hbaseManager.changeUserPassword(userId,newPassword, function (data) {
-
+                    console.log(data);
+                    if(data==true){
+                        res.send({'success':true,'info':"修改密码成功"});
+                    }else{
+                        res.send({'success':false,'info':"修改错误"});
+                    }
                 });
+            }else{
+                res.send({'success':false,'info':"原密码错误"});
             }
         }
     });
@@ -228,6 +235,14 @@ UserManager.prototype.changePassword=function (req,res){
 
 UserManager.prototype.changeEmail=function(req,res){
     var newEmail=req.body.newEmail;
+    var userId=req.body.userId;
+    hbaseManager.changeUserEmail(userId,newEmail,function(data){
+       if(data==true){
+           res.send({'success':true,'info':"修改邮箱成功"});
+       }else{
+            res.send({'success':false,'info':"修改邮箱错误"});
+        }
+    });
 }
 
 UserManager.prototype.changeQuestion=function(req,res){
@@ -237,6 +252,7 @@ UserManager.prototype.changeQuestion=function(req,res){
     var question1=req.body.question1;
     var question2=req.body.question2;
     var question3=req.body.question3;
+    var userId=req.body.userId;
 
     var replys={
         reply1 : {
@@ -254,8 +270,46 @@ UserManager.prototype.changeQuestion=function(req,res){
     };
     var replysJson=JSON.stringify(replys);
     console.log(replysJson);
+    hbaseManager.setUserSecurityQuestion(userId,replysJson,function(data){
+        if(data==true){
+            console.log("成功");
+            res.send({'success':true,'info':"密保设置成功"});
+        }
+        if(data==false){
+            console.log("失败");
+            res.send({'success':false,'info':"密保设置失败"});
+        }
+    })
 }
-
+UserManager.prototype.getQuestions=function(req,res){
+    var userId=req.body.userId;
+    hbaseManager.getUser(userId, function (err, user) {
+        if (user) {
+            hbaseManager.getUserSecurityQuestion(userId, function (data) {
+                console.log(data);
+                if(data==null){
+                    res.send({'success':false,'info':"此账号没有设置密保问题"});
+                }else{
+                    res.send({'success':true,'info':JSON.parse(data)});
+                }
+            });
+        }else{
+            res.send({'success':false,'info':"账户不存在"});
+        }
+    });
+}
+UserManager.prototype.resetPassword=function(req,res){
+    var userId=req.body.userId;
+    var newPassword=req.body.newPassword;
+    hbaseManager.changeUserPassword(userId,newPassword, function (data) {
+        console.log(data);
+        if(data==true){
+            res.send({'success':true,'info':"修改密码成功"});
+        }else{
+            res.send({'success':false,'info':"修改错误"});
+        }
+    });
+}
 
 
 exports.getUserManager= function () {

@@ -40,6 +40,11 @@ $(document).ready(function () {
                 $($popBoxs[2]).show();
                 $("#mask").show();
             });
+            //关闭sucess-box
+            $(".success-close").on("click",function(){
+                $("#success-box").hide();
+                $("#mask").hide();
+            });
         },
         //���pop-box��ȡ��
         clickCancel : function () {
@@ -92,12 +97,20 @@ $(document).ready(function () {
                     url : '/personSetting-changePassword',
                     type : 'POST',
                     data : data,
-                    dataType : 'jsonp',
+                    dataType : 'json',   //不是跨域强制jsonp会返回error被error函数捕捉
                     success : function(data){
-
+                        console.log(data);
+                        if(data.success==false){
+                            $(".password-again-error-tips span").text(data.info);
+                            $(".password-again-error-tips").show();
+                        }
+                        if(data.success==true){
+                            $($popBoxs[0]).hide();
+                            $("#success-box").show();
+                        }
                     },
                     error : function(){
-                        $(".password-again-error-tips span").text("修改失败");
+                        $(".password-again-error-tips span").text("修改错误");
                         $(".password-again-error-tips").show();
                     }
                 });
@@ -109,17 +122,25 @@ $(document).ready(function () {
                 $(".email-error-tips span").text("邮箱不能为空");
                 $(".email-error-tips").show();
             }else{
-                var data={"newEmail":newEmail};
+                var data={"newEmail":newEmail,"userId":userId};
                 $.ajax({
                     url : '/personSetting-changeEmail',
                     type : 'POST',
                     data : data,
-                    dataType : 'jsonp',
+                    dataType : 'json',
                     success : function(data){
-
+                        if(data.success==true){
+                            $($popBoxs[1]).hide();
+                            $("#success-box").show();
+                        }
+                        if(data.success==false){
+                            $(".email-again-error-tips span").text(data.info);
+                            $(".email-again-error-tips").show();
+                        }
                     },
                     error : function(){
-
+                        $(".email-again-error-tips span").text("修改错误");
+                        $(".email-again-error-tips").show();
                     }
                 });
             }
@@ -139,17 +160,27 @@ $(document).ready(function () {
                 $(".question-error-tips span").text("回答不能为空");
                 $(".question-error-tips").show();
             }else{
-                var data={"select1":select1,"select2":select2,"select3":select3,"question1":question1,"question2":question2,"question3":question3};
+                var data={"userId":userId,"select1":select1,"select2":select2,"select3":select3,"question1":question1,"question2":question2,"question3":question3};
+                console.log(data);
                 $.ajax({
                     url : '/personSetting-changeQuestion',
                     type : 'POST',
                     data : data,
-                    dataType : "jsonp",
-                    success : function(){
-
+                    dataType : "json",
+                    success : function(data){
+                        console.log(data);
+                        if(data.success==true){
+                            $($popBoxs[2]).hide();
+                            $("#success-box").show();
+                        }
+                        if(data.success==false){
+                            $(".question-error-tips span").text(data.info);
+                            $(".question-error-tips").show();
+                        }
                     },
                     error : function(){
-
+                        $(".question-error-tips span").text("设置错误");
+                        $(".question-error-tips").show();
                     }
 
                 });
